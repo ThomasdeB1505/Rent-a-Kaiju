@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8988866222075271296}
   - component: {fileID: 8976882677420005473}
   - component: {fileID: 4845644586966346027}
+  - component: {fileID: -3183266074194119559}
   m_Layer: 6
   m_Name: Crate 3
   m_TagString: Untagged
@@ -172,3 +173,21 @@ MonoBehaviour:
   volume: 0.044
   volumeVariation: 0.1
   pitchVariation: 0.25
+--- !u!114 &-3183266074194119559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7957644449929055489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4fdf176a8519344b0403a7c2f0eb10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimapLayer: Minimap
+  mapWorldOffset: {x: 0, y: 0, z: 0}
+  overrideMaterial: {fileID: 0}
+  tintFromTargetType: 1
+  tintEmission: 1.5
+  followOriginal: 0

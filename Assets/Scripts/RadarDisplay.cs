@@ -54,6 +54,30 @@ public class RadarDisplay : MonoBehaviour
     public Color monitorBackground = Color.black;
 
     // ---------------------------------------------------------------- Look
+    [Header("Custom Art (leave empty to use the built-in look)")]
+    [Tooltip("The round screen behind everything. Its shape also crops the minimap.")]
+    public Sprite customBackground;
+    [Tooltip("Range rings / crosshair overlay.")]
+    public Sprite customGrid;
+    [Tooltip("The rotating sweep. Draw it pointing UP from the center, trail to the LEFT (counter-clockwise). It rotates around the image center.")]
+    public Sprite customSweep;
+    [Tooltip("Blip used for every channel, unless a channel has its own below.")]
+    public Sprite customBlip;
+    [Tooltip("Optional per-channel blips, in the same order as the scanner's channels (0 = Objective, 1 = Forbidden).")]
+    public List<Sprite> customChannelBlips = new List<Sprite>();
+    [Tooltip("Player marker in the center (only shown if Show Player Marker is on). Draw it pointing UP.")]
+    public Sprite customPlayer;
+    [Tooltip("Optional bezel/frame drawn ON TOP of everything (screws, glass glare, scratches...). Can be bigger than the scope.")]
+    public Sprite customFrame;
+    [Tooltip("Frame size relative to the scope. 1 = same size, 1.2 = 20% bigger (for a bezel around the scope).")]
+    public float frameScale = 1f;
+    [Tooltip("Optional shape that crops the minimap. Empty = uses the background's shape.")]
+    public Sprite customMapMask;
+    [Tooltip("On: custom sprites are tinted with the colors below (draw them white/grey). Off: your art keeps its own colors.")]
+    public bool tintCustomSprites = false;
+    [Tooltip("Blips use the channel color (blue/red) even when tinting is off. Turn off if your blip art is already colored.")]
+    public bool tintBlipsWithChannelColor = true;
+
     [Header("Look")]
     public Color backgroundColor = new Color(0.02f, 0.12f, 0.06f, 0.85f);
     public Color gridColor = new Color(0.2f, 1f, 0.45f, 0.35f);
@@ -114,7 +138,7 @@ public class RadarDisplay : MonoBehaviour
     }
 
     RectTransform root, sweepRT, playerRT, blipParent;
-    Image bgImage, gridImage, sweepImage, playerImage;
+    Image bgImage, gridImage, sweepImage, playerImage, frameImage;
     CanvasGroup group;
     Text readout;
     Sprite blipSprite;
@@ -191,19 +215,28 @@ public class RadarDisplay : MonoBehaviour
         group.interactable = false;
 
         const int res = 256;
-        bgImage = NewImage("Background", root, ToSprite(MakeDisc(res)));
+        // Built-in art is only generated for the parts you didn't replace.
+        bgImage = NewImage("Background", root, customBackground ? customBackground : ToSprite(MakeDisc(res)));
         if (useMinimap) BuildMinimap();
-        sweepImage = NewImage("Sweep", root, ToSprite(MakeSweep(res, sweepTrailDegrees)));
-        gridImage = NewImage("Grid", root, ToSprite(MakeGrid(res, rangeRings, crosshair)));
+        sweepImage = NewImage("Sweep", root, customSweep ? customSweep : ToSprite(MakeSweep(res, sweepTrailDegrees)));
+        gridImage = NewImage("Grid", root, customGrid ? customGrid : ToSprite(MakeGrid(res, rangeRings, crosshair)));
         sweepRT = sweepImage.rectTransform;
 
         blipParent = NewRect("Blips", root);
         Stretch(blipParent);
-        blipSprite = ToSprite(MakeBlip(32));
+        blipSprite = customBlip ? customBlip : ToSprite(MakeBlip(32));
 
-        playerImage = NewImage("Player", root, ToSprite(MakeTriangle(64)));
+        playerImage = NewImage("Player", root, customPlayer ? customPlayer : ToSprite(MakeTriangle(64)));
+        playerImage.preserveAspect = true;
         playerRT = playerImage.rectTransform;
         Center(playerRT);
+
+        if (customFrame)
+        {
+            frameImage = NewImage("Frame", root, customFrame);
+            frameImage.preserveAspect = true;
+            Center(frameImage.rectTransform);
+        }
 
         var textGo = new GameObject("Readout", typeof(RectTransform), typeof(Text), typeof(Outline));
         readout = textGo.GetComponent<Text>();
@@ -271,7 +304,7 @@ public class RadarDisplay : MonoBehaviour
         var maskRT = NewRect("MapMask", root);
         Stretch(maskRT);
         var maskImg = maskRT.gameObject.AddComponent<Image>();
-        maskImg.sprite = bgImage.sprite;
+        maskImg.sprite = customMapMask ? customMapMask : bgImage.sprite;
         maskImg.raycastTarget = false;
         maskRT.gameObject.AddComponent<Mask>().showMaskGraphic = false;
 
@@ -354,7 +387,11 @@ public class RadarDisplay : MonoBehaviour
             float a = Mathf.Clamp01(1f - since / Mathf.Max(0.01f, blipFadeTime));
             if (valid && b.pinged) a = Mathf.Max(a, blipMinAlpha);
 
-            Color c = ch.color;
+            Sprite channelSprite = i < customChannelBlips.Count ? customChannelBlips[i] : null;
+            if (channelSprite && b.image.sprite != channelSprite) b.image.sprite = channelSprite;
+            bool hasCustomArt = channelSprite || customBlip;
+
+            Color c = (!hasCustomArt || tintBlipsWithChannelColor) ? ch.color : Color.white;
             c.a *= a;
             b.image.color = c;
             b.image.enabled = a > 0.001f;
@@ -435,6 +472,7 @@ public class RadarDisplay : MonoBehaviour
         root.sizeDelta = new Vector2(size, size);
 
         playerRT.sizeDelta = Vector2.one * Mathf.Max(8f, size * 0.06f);
+        if (frameImage) frameImage.rectTransform.sizeDelta = Vector2.one * size * Mathf.Max(0.01f, frameScale);
 
         // Readout goes above the scope when docked at the bottom, otherwise below.
         bool below = a.y > 0f;
@@ -449,11 +487,17 @@ public class RadarDisplay : MonoBehaviour
 
     void ApplyColors()
     {
-        bgImage.color = backgroundColor;
-        gridImage.color = gridColor;
-        sweepImage.color = sweepColor;
-        playerImage.color = playerColor;
+        bgImage.color = Tint(customBackground, backgroundColor);
+        gridImage.color = Tint(customGrid, gridColor);
+        sweepImage.color = Tint(customSweep, sweepColor);
+        playerImage.color = Tint(customPlayer, playerColor);
         playerImage.enabled = showPlayerMarker;
+    }
+
+    // Built-in art is white and always tinted; your own art is only tinted if you ask for it.
+    Color Tint(Sprite custom, Color color)
+    {
+        return (custom && !tintCustomSprites) ? Color.white : color;
     }
 
     static RectTransform NewRect(string name, Transform parent)

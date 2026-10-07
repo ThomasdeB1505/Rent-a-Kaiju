@@ -71,6 +71,8 @@ public class RadarDisplay : MonoBehaviour
     public Sprite customFrame;
     [Tooltip("Frame size relative to the scope. 1 = same size, 1.2 = 20% bigger (for a bezel around the scope).")]
     public float frameScale = 1f;
+    [Tooltip("Nudge the frame if it isn't perfectly centered, in the same units as Size (e.g. 2, -3).")]
+    public Vector2 frameOffset = Vector2.zero;
     [Tooltip("Optional shape that crops the minimap. Empty = uses the background's shape.")]
     public Sprite customMapMask;
     [Tooltip("On: custom sprites are tinted with the colors below (draw them white/grey). Off: your art keeps its own colors.")]
@@ -472,7 +474,11 @@ public class RadarDisplay : MonoBehaviour
         root.sizeDelta = new Vector2(size, size);
 
         playerRT.sizeDelta = Vector2.one * Mathf.Max(8f, size * 0.06f);
-        if (frameImage) frameImage.rectTransform.sizeDelta = Vector2.one * size * Mathf.Max(0.01f, frameScale);
+        if (frameImage)
+        {
+            frameImage.rectTransform.sizeDelta = Vector2.one * size * Mathf.Max(0.01f, frameScale);
+            frameImage.rectTransform.anchoredPosition = frameOffset;
+        }
 
         // Readout goes above the scope when docked at the bottom, otherwise below.
         bool below = a.y > 0f;

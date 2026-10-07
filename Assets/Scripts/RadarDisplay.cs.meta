@@ -1,2 +1,23 @@
 fileFormatVersion: 2
 guid: 86ef2745c8e1e8b46b3f76e33bdd5005
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - scanner: {instanceID: 0}
+  - headingSource: {instanceID: 0}
+  - canvas: {instanceID: 0}
+  - customBackground: {instanceID: 0}
+  - customGrid: {instanceID: 0}
+  - customSweep: {instanceID: 0}
+  - customBlip: {instanceID: 0}
+  - customPlayer: {instanceID: 0}
+  - customFrame: {instanceID: 0}
+  - customMapMask: {instanceID: 0}
+  - readoutFont: {instanceID: 0}
+  - minimapCamera: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

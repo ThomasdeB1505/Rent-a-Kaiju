@@ -166,11 +166,8 @@ MonoBehaviour:
   player: {fileID: 0}
   distanceFromPlayer: 30
   audioClips:
-  - {fileID: 8300000, guid: 7eb48b1ee23012b48a2d6530e6d0ab30, type: 3}
-  - {fileID: 8300000, guid: dc7724320e7f5a34d994515d42ac1cb9, type: 3}
-  - {fileID: 8300000, guid: 9c9202f6f00d04c489a7eab8d91cc942, type: 3}
-  - {fileID: 8300000, guid: 43119588cb2c1da4dbbb021a1151f9dd, type: 3}
-  volume: 0.021
+  - {fileID: 8300000, guid: ba8d174fc7a5c0442b03caef9326e3e9, type: 3}
+  volume: 0.306
   volumeVariation: 0.1
   pitchVariation: 0.25
 --- !u!114 &7708841166363487581

@@ -1464,7 +1464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b9c1629fa112f28428ae9fff537fbfcc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 551
+      value: 1160
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b9c1629fa112f28428ae9fff537fbfcc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2378,18 +2378,6 @@ MonoBehaviour:
   targetDisplay: 0
   fallbackToMainDisplay: 1
   monitorBackground: {r: 0, g: 0, b: 0, a: 1}
-  customBackground: {fileID: 0}
-  customGrid: {fileID: 0}
-  customSweep: {fileID: 0}
-  customBlip: {fileID: 0}
-  customChannelBlips: []
-  customPlayer: {fileID: 0}
-  customFrame: {fileID: 21300000, guid: e86c58c39188bdc4daa8a2c7493bf837, type: 3}
-  frameScale: 1.16
-  frameOffset: {x: 8.33, y: -21.9}
-  customMapMask: {fileID: 0}
-  tintCustomSprites: 0
-  tintBlipsWithChannelColor: 1
   backgroundColor: {r: 0.19607843, g: 0.08235294, b: 0.19607843, a: 0}
   gridColor: {r: 0.2, g: 1, b: 0.45, a: 0}
   sweepColor: {r: 0.49411765, g: 0.21176471, b: 0.49803922, a: 0.55}

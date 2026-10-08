@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using DiabolicalGames;
 
 [RequireComponent(typeof(Rigidbody))]
 public class FirstPersonMovement : MonoBehaviour
@@ -14,6 +15,22 @@ public class FirstPersonMovement : MonoBehaviour
 
     [Header("Tank Turning")]
     public float turnSpeed = 120f;
+
+    [Header("Push Force")]
+    [Tooltip("Force applied to things you walk into.")]
+    public float walkPushForce = 200f;
+    [Tooltip("Force applied to things you run into.")]
+    public float runPushForce = 600f;
+    [Tooltip("Also physically push non-kinematic rigidbodies you walk into.")]
+    public bool pushRigidbodies = true;
+    [Tooltip("How directly you must be moving into a surface for force to apply (1 = head-on only, 0 = any angle in front).")]
+    [Range(0f, 1f)] public float pushAngleThreshold = 0.5f;
+
+    /// <summary>Force currently applied when walking into something.</summary>
+    public float CurrentPushForce => IsRunning ? runPushForce : walkPushForce;
+
+    /// <summary>When true, the player can't move or turn (e.g. during an attack).</summary>
+    [HideInInspector] public bool movementLocked;
 
     [Header("Footsteps")]
     public bool footstepsEnabled = true;
@@ -44,6 +61,10 @@ public class FirstPersonMovement : MonoBehaviour
     float stepTimer;
     int lastClipIndex = -1;
 
+    // The velocity we *tried* to move at this physics step. Used for push force,
+    // because the actual velocity drops to ~0 once we're pressed against a wall.
+    Vector3 intendedMoveVelocity;
+
     void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -58,7 +79,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        IsRunning = canRun && Input.GetKey(runningKey);
+        IsRunning = canRun && !movementLocked && Input.GetKey(runningKey);
 
         float targetMovingSpeed = IsRunning ? runSpeed : speed;
         if (speedOverrides.Count > 0)
@@ -70,14 +91,58 @@ public class FirstPersonMovement : MonoBehaviour
         // without fighting our own script-driven Y rotation below.
         rigidbody.angularVelocity = Vector3.zero;
 
-        float turn = Input.GetAxis("Horizontal");
+        float turn = movementLocked ? 0f : Input.GetAxis("Horizontal");
         transform.Rotate(Vector3.up, turn * turnSpeed * Time.fixedDeltaTime, Space.World);
 
-        float forwardInput = Input.GetAxis("Vertical") * targetMovingSpeed;
+        float forwardInput = movementLocked ? 0f : Input.GetAxis("Vertical") * targetMovingSpeed;
         Vector3 targetVelocity = transform.rotation * new Vector3(0, 0, forwardInput);
+        intendedMoveVelocity = targetVelocity;
         targetVelocity.y = rigidbody.linearVelocity.y;
 
         rigidbody.linearVelocity = targetVelocity;
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        ApplyPushForce(collision);
+    }
+
+    void ApplyPushForce(Collision collision)
+    {
+        Vector3 moveDir = intendedMoveVelocity;
+        moveDir.y = 0f;
+        if (moveDir.sqrMagnitude < 0.01f) return; // not trying to move
+        moveDir.Normalize();
+
+        // Find a contact we're actually walking into (not the floor, not something behind us).
+        // Contact normals point from the other object toward us.
+        bool found = false;
+        Vector3 hitPoint = Vector3.zero;
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            ContactPoint contact = collision.GetContact(i);
+            if (Vector3.Dot(moveDir, -contact.normal) >= pushAngleThreshold)
+            {
+                hitPoint = contact.point;
+                found = true;
+                break;
+            }
+        }
+        if (!found) return;
+
+        float force = CurrentPushForce;
+
+        DestructibleObject destructible = collision.collider.GetComponentInParent<DestructibleObject>();
+        if (destructible != null)
+        {
+            destructible.ApplyForce(force, hitPoint, moveDir);
+        }
+
+        Rigidbody otherBody = collision.rigidbody;
+        if (pushRigidbodies && otherBody != null && !otherBody.isKinematic)
+        {
+            otherBody.AddForceAtPosition(moveDir * force, hitPoint, ForceMode.Force);
+        }
     }
 
     void Update()

@@ -112,8 +112,8 @@ MonoBehaviour:
   debrisLaunchSpeed: 4
   ignoreDebrisCollisions: 1
   despawnType: 0
-  despawnPercentage: 0
-  despawnTime: 0
+  despawnPercentage: 75
+  despawnTime: 10
   player: {fileID: 0}
   distanceFromPlayer: 0
   audioClips:

@@ -3624,7 +3624,7 @@ MonoBehaviour:
   customMapMask: {fileID: 0}
   tintCustomSprites: 0
   tintBlipsWithChannelColor: 1
-  backgroundColor: {r: 0.19607843, g: 0.08235294, b: 0.19607843, a: 0}
+  backgroundColor: {r: 0.19607843, g: 0.08235294, b: 0.19607843, a: 0.9137255}
   gridColor: {r: 0.2, g: 1, b: 0.45, a: 0}
   sweepColor: {r: 0.49411765, g: 0.21176471, b: 0.49803922, a: 0.55}
   playerColor: {r: 0.6, g: 1, b: 0.7, a: 1}
@@ -8135,7 +8135,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 07ca87b88765b7c4db2d25da50a6b676, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -34091,7 +34091,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 3a9594efbca372a48b36efb5b6d9c4bc, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 0.293
   m_Pitch: 1
   Loop: 1

@@ -83,7 +83,7 @@ public class PlayerAttack : MonoBehaviour
             audioSource.PlayOneShot(swingSound);
 
         if (lockMovement && movement != null)
-            StartCoroutine(LockMovementRoutine());
+            movement.LockMovement(lockDuration);
 
         if (!useAnimationEvent)
             StartCoroutine(DelayedHit());
@@ -93,13 +93,6 @@ public class PlayerAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(hitDelay);
         AttackHit();
-    }
-
-    IEnumerator LockMovementRoutine()
-    {
-        movement.movementLocked = true;
-        yield return new WaitForSeconds(lockDuration);
-        movement.movementLocked = false;
     }
 
     /// <summary>

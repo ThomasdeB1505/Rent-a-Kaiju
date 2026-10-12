@@ -29,8 +29,18 @@ public class FirstPersonMovement : MonoBehaviour
     /// <summary>Force currently applied when walking into something.</summary>
     public float CurrentPushForce => IsRunning ? runPushForce : walkPushForce;
 
-    /// <summary>When true, the player can't move or turn (e.g. during an attack).</summary>
-    [HideInInspector] public bool movementLocked;
+    /// <summary>True while the player can't move or turn (e.g. during an attack).</summary>
+    public bool movementLocked => Time.time < lockedUntil;
+    float lockedUntil;
+
+    /// <summary>
+    /// Stops movement and turning for the given number of seconds.
+    /// Several attacks can call this; the lock lasts until the latest one ends.
+    /// </summary>
+    public void LockMovement(float duration)
+    {
+        lockedUntil = Mathf.Max(lockedUntil, Time.time + duration);
+    }
 
     [Header("Footsteps")]
     public bool footstepsEnabled = true;

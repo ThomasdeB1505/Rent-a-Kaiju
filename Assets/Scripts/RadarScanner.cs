@@ -120,10 +120,11 @@ public class RadarScanner : MonoBehaviour
     public Vector3 Origin => scanOrigin ? scanOrigin.position : transform.position;
 
     // ================================================================ Loop
+    public bool listenForKey = true;   // new field
 
     void Update()
     {
-        HandleInput();
+        if (listenForKey) HandleInput();   // was: HandleInput();
         if (!IsActive) return;
 
         if (activationMode == ActivationMode.Pulse && Time.time >= activeUntil)

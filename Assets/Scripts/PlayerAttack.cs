@@ -64,15 +64,7 @@ public class PlayerAttack : MonoBehaviour
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(attackKey) && Time.time >= nextAttackTime)
-        {
-            StartAttack();
-        }
-    }
-
-    void StartAttack()
+    public void StartAttack()   // was: void StartAttack()
     {
         nextAttackTime = Time.time + cooldown;
 

@@ -47,21 +47,25 @@ public class KaijuDisplaySetup : MonoBehaviour
 
         // If only one screen is connected, fall back to showing both on the main display
         // so the game is still playable (you could also switch to split-screen here).
-        int kaijuTarget = kaijuDisplayIndex < available ? kaijuDisplayIndex : 0;
-        int cityTarget  = cityDisplayIndex  < available ? cityDisplayIndex  : 0;
+        // In the Editor, Display.displays.Length is always 1, so pretend we have 2.
+        // Preview the second screen with a Game view set to "Display 2".
+        int effective = Application.isEditor ? 2 : available;
 
-        if (available < 2)
+        int kaijuTarget = kaijuDisplayIndex < effective ? kaijuDisplayIndex : 0;
+        int cityTarget = cityDisplayIndex < effective ? cityDisplayIndex : 0;
+
+        if (effective < 2)
         {
             Debug.LogWarning("[KaijuDisplaySetup] Only one display found. Using split-screen fallback.");
             if (kaijuCamera) kaijuCamera.rect = new Rect(0f, 0f, 0.5f, 1f);
-            if (cityCamera)  cityCamera.rect  = new Rect(0.5f, 0f, 0.5f, 1f);
+            if (cityCamera) cityCamera.rect = new Rect(0.5f, 0f, 0.5f, 1f);
         }
 
         if (kaijuCamera) kaijuCamera.targetDisplay = kaijuTarget;
-        if (cityCamera)  cityCamera.targetDisplay  = cityTarget;
+        if (cityCamera) cityCamera.targetDisplay = cityTarget;
 
         if (kaijuCanvas) kaijuCanvas.targetDisplay = kaijuTarget;
-        if (cityCanvas)  cityCanvas.targetDisplay  = cityTarget;
+        if (cityCanvas) cityCanvas.targetDisplay = cityTarget;
     }
 
     /// <summary>

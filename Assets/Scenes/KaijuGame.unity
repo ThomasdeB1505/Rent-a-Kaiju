@@ -1482,7 +1482,7 @@ MonoBehaviour:
   size: 280
   margin: {x: 30, y: 30}
   referenceResolution: {x: 1920, y: 1080}
-  targetDisplay: 0
+  targetDisplay: 1
   fallbackToMainDisplay: 1
   monitorBackground: {r: 0, g: 0, b: 0, a: 1}
   customBackground: {fileID: 0}
@@ -16761,8 +16761,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 14e6d9d346f10e14ba3fe8756d6a64c5, type: 2}
-  m_sharedMaterial: {fileID: 3266328695482184605, guid: 14e6d9d346f10e14ba3fe8756d6a64c5, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

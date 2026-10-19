@@ -87,7 +87,7 @@ MonoBehaviour:
   - name: Low
     prefab: {fileID: 7249926943044583325, guid: a851c85484f534c46ba403238faf6a61, type: 3}
   debrisAmount: 0
-  forceRequired: 0
+  forceRequired: 5
   ignorePlayerCollisions: 1
   playerTag: Player
   debrisLaunchSpeed: 4

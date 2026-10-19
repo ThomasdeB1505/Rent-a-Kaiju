@@ -83,9 +83,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df0017fec6ca4d4c97045d46eb7c26d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debrisPrefabs: []
+  debrisPrefabs:
+  - name: Low
+    prefab: {fileID: 8741712604968662444, guid: d1fe41462a140204ca1d6883ebfda3db, type: 3}
   debrisAmount: 0
-  forceRequired: 10
+  forceRequired: 5
   ignorePlayerCollisions: 1
   playerTag: Player
   debrisLaunchSpeed: 4

@@ -87,10 +87,10 @@ MonoBehaviour:
   - name: Low
     prefab: {fileID: 5504692760762697129, guid: 59f5585fd7f3fec47a933a4c0fe24a61, type: 3}
   debrisAmount: 0
-  forceRequired: 10
+  forceRequired: 20
   ignorePlayerCollisions: 1
   playerTag: Player
-  debrisLaunchSpeed: 4
+  debrisLaunchSpeed: 10
   ignoreDebrisCollisions: 1
   despawnType: 0
   despawnPercentage: 0
@@ -146,7 +146,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0

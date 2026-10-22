@@ -85,7 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debrisPrefabs:
   - name: Low
-    prefab: {fileID: 0}
+    prefab: {fileID: 4779030982031158936, guid: 82fff961fde3a8d4e9e20ee834b7ad9d, type: 3}
   debrisAmount: 0
   forceRequired: 5
   ignorePlayerCollisions: 1

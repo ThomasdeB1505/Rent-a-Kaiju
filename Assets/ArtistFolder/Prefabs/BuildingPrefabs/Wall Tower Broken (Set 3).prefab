@@ -62,6 +62,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7a87c0ff765506945a3938468139ab22, type: 3}
       insertIndex: -1
       addedObject: {fileID: -6212542609952435850}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7a87c0ff765506945a3938468139ab22, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3452661872912768396}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7a87c0ff765506945a3938468139ab22, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1951987281794266045}
     - targetCorrespondingSourceObject: {fileID: 971172597956736604, guid: 7a87c0ff765506945a3938468139ab22, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1784863944873684568}
@@ -1713,6 +1719,55 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3452661872912768396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6867501472237080313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94d4d773f684f1944b950ec991ff817e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footprint: {x: 10, y: 10}
+  maxHeight: 0
+--- !u!114 &1951987281794266045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6867501472237080313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4499d2451a0333c4aa3afee352962fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPointsParent: {fileID: 0}
+  mapRoot: {fileID: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  spacing: 12
+  randomOffset: 0.15
+  seed: 1
+  boxSize: {x: 10, y: 10}
+  maxHeight: 0
+  addBoxComponent: 1
+  maxSlope: 15
+  maxHeightDifference: 1.5
+  edgeClearance: 0.5
+  boxCheckStep: 1
+  requireRoadNearby: 1
+  roadSearchDistance: 25
+  roadSearchStep: 1
+  roadDirections: 16
+  snapToRoadEdge: 1
+  roadSetback: 1
+  minPointDistance: 8
+  clearPreviousFirst: 1
 --- !u!1 &7280579795081671297 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3929106288648012073, guid: 7a87c0ff765506945a3938468139ab22, type: 3}

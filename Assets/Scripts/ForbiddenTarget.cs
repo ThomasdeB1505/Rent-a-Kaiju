@@ -25,7 +25,7 @@ public class ForbiddenTarget : MonoBehaviour
 
     [Header("On Destroyed Feedback")]
     [Tooltip("Text shown on the second monitor when this object is destroyed.")]
-    public string popupMessage = "!!!DANGER!!!";
+    public string popupMessage = "!DANGER!";
     public float shakeDuration = 0.6f;
     public float shakeMagnitude = 0.3f;
 

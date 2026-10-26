@@ -93,6 +93,15 @@ namespace DiabolicalGames
         private bool isBroken;
 
         /// <summary>
+        /// Force needed to break this object. Can be changed at runtime or by other scripts (e.g. ObjectiveTarget).
+        /// </summary>
+        public float ForceRequired
+        {
+            get => forceRequired;
+            set => forceRequired = value;
+        }
+
+        /// <summary>
         /// Called by the player when walking into this object or attacking it.
         /// </summary>
         public void ApplyForce(float force, Vector3 point, Vector3 direction)

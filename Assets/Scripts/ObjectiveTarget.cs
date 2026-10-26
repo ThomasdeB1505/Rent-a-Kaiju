@@ -1,9 +1,13 @@
 using UnityEngine;
+using DiabolicalGames;
 
 /// <summary>
 /// Put this on any destructible object that should count toward the win condition.
 /// It makes the object glow (blue by default) and automatically reports itself to
 /// the ObjectiveManager when destroyed.
+///
+/// It can also override the Force Required on the DestructibleObject, so you can
+/// tune how hard each objective is to break right from this component.
 ///
 /// Works out of the box as long as your existing destruction logic eventually calls
 /// Destroy(gameObject) on this object — you don't need to change that code.
@@ -14,6 +18,12 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class ObjectiveTarget : MonoBehaviour
 {
+    [Header("Breaking")]
+    [Tooltip("If on, this value replaces the Force Required on the DestructibleObject.")]
+    public bool overrideForceRequired = true;
+    [Tooltip("Force needed to break this object (compared against impact speed and the player's push/attack force).")]
+    public float forceRequired = 5f;
+
     [Header("Glow")]
     public Color glowColor = Color.blue;
     [Tooltip("HDR brightness multiplier for the emission glow.")]
@@ -26,11 +36,24 @@ public class ObjectiveTarget : MonoBehaviour
     private MaterialPropertyBlock propBlock;
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
+    private DestructibleObject destructible;
     private bool destroyedReported;
     private static bool appIsQuitting;
 
     void Awake()
     {
+        // Find the DestructibleObject and apply the force override
+        destructible = GetComponent<DestructibleObject>();
+        if (destructible == null) destructible = GetComponentInParent<DestructibleObject>();
+
+        if (overrideForceRequired)
+        {
+            if (destructible != null)
+                destructible.ForceRequired = forceRequired;
+            else
+                Debug.LogWarning($"{name}: No DestructibleObject found, so Force Required can't be applied.", this);
+        }
+
         renderers = GetComponentsInChildren<Renderer>();
         propBlock = new MaterialPropertyBlock();
 
@@ -63,6 +86,13 @@ public class ObjectiveTarget : MonoBehaviour
     void Update()
     {
         if (pulse) ApplyGlow();
+    }
+
+    /// <summary>Change the force requirement at runtime (e.g. from difficulty settings or upgrades).</summary>
+    public void SetForceRequired(float value)
+    {
+        forceRequired = value;
+        if (destructible != null) destructible.ForceRequired = value;
     }
 
     void ApplyGlow()

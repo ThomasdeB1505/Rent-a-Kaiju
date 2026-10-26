@@ -21726,6 +21726,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &297031149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31201,6 +31204,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: City Layout and Mountains (Set 2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1340347295769485010, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
@@ -31209,10 +31216,70 @@ PrefabInstance:
     - {fileID: -1374161610312379201, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -2607050024914767674, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 409437941}
+    - targetCorrespondingSourceObject: {fileID: -3078970905775685559, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 409437940}
     - targetCorrespondingSourceObject: {fileID: -2936786605162864142, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
       insertIndex: -1
       addedObject: {fileID: 397093400}
   m_SourcePrefab: {fileID: 100100000, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+--- !u!1 &409437938 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3078970905775685559, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+  m_PrefabInstance: {fileID: 409437937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &409437939 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2607050024914767674, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+  m_PrefabInstance: {fileID: 409437937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &409437940
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409437938}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5516473438403694487, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
+--- !u!64 &409437941
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409437939}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2272529238298640019, guid: 6c28304697994d24aa1c19956d2b4f97, type: 3}
 --- !u!1 &409704324
 GameObject:
   m_ObjectHideFlags: 0
@@ -42018,6 +42085,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &556587856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43897,6 +43967,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -45732,6 +45804,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -49422,7 +49496,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1795917057}
   m_Father: {fileID: 1427462781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -54429,6 +54504,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &710957434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57543,6 +57621,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -59611,6 +59691,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &784857118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62959,7 +63042,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114103969153859672, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: defaultFOV
-      value: 30
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 114103969153859672, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       propertyPath: currentZoom
@@ -63043,6 +63126,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1593727746557118, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1248264310}
+    - targetCorrespondingSourceObject: {fileID: 1593727746557118, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1248264322}
     - targetCorrespondingSourceObject: {fileID: 6106142551385397388, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 35704021}
@@ -65779,6 +65865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -66963,6 +67051,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &896868341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68563,6 +68654,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -70373,6 +70466,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &944902293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70805,6 +70901,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footprint: {x: 5, y: 5}
   maxHeight: 0
+--- !u!1 &948940316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 948940318}
+  - component: {fileID: 948940317}
+  m_Layer: 0
+  m_Name: ForbiddenFeedback
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &948940317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948940316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93820600224dc5e4cbefb51400d1a9d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateSecondDisplay: 1
+  secondMonitorShake: {fileID: 1248264322}
+  popupText: {fileID: 1795917055}
+  popupDuration: 3
+  popupFadeTime: 0.5
+  explosionPrefab: {fileID: 0}
+  smokePrefab: {fileID: 0}
+  effectLifetime: 6
+--- !u!4 &948940318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948940316}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 37.775566, y: -1.4999862, z: -121.34034}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &949235569
 GameObject:
   m_ObjectHideFlags: 0
@@ -74426,6 +74574,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -77774,6 +77924,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1048275990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83325,6 +83478,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1122066237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92068,6 +92224,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1230632530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93752,6 +93911,18 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 20437472682476688, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
   m_PrefabInstance: {fileID: 839820886}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1248264322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248264303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddc2d5e51766834e930e2a56b6fbc9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1249289298
 GameObject:
   m_ObjectHideFlags: 0
@@ -94860,6 +95031,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1266000988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97464,6 +97638,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -102168,6 +102344,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1364238607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102669,6 +102848,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footprint: {x: 5, y: 5}
   maxHeight: 0
+--- !u!1 &1366201491 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2607050024914767674, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+  m_PrefabInstance: {fileID: 1592560674}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1366201493
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366201491}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2272529238298640019, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
 --- !u!1 &1366387442
 GameObject:
   m_ObjectHideFlags: 0
@@ -107063,7 +107269,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -107360,6 +107566,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1429360704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113161,6 +113370,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -114392,6 +114603,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footprint: {x: 5, y: 5}
   maxHeight: 0
+--- !u!1 &1520651653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3078970905775685559, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+  m_PrefabInstance: {fileID: 1592560674}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1520651655
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520651653}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5516473438403694487, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
 --- !u!4 &1521085734
 Transform:
   m_ObjectHideFlags: 0
@@ -117199,6 +117437,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1551153297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120344,6 +120585,85 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footprint: {x: 5, y: 5}
   maxHeight: 0
+--- !u!1001 &1592560674
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1446.7792
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1446.7792
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1446.7792
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -255
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_Name
+      value: Ground and Streets and Mountains (Version 4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -2607050024914767674, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1366201493}
+    - targetCorrespondingSourceObject: {fileID: -3078970905775685559, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1520651655}
+  m_SourcePrefab: {fileID: 100100000, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
 --- !u!1 &1593330606
 GameObject:
   m_ObjectHideFlags: 0
@@ -121927,6 +122247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -123823,6 +124145,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1639865740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128553,6 +128878,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1703706671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129744,6 +130072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -130392,6 +130722,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1720176183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131967,6 +132300,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1742873877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132840,6 +133176,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1748292663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134764,6 +135103,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1777102847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135518,6 +135860,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1785156687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136345,6 +136690,142 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aee3ddefae3f0ca43bbfde2dff4c6010, type: 3}
+--- !u!1 &1795917054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1795917057}
+  - component: {fileID: 1795917056}
+  - component: {fileID: 1795917055}
+  m_Layer: 5
+  m_Name: Danger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1795917055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795917054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Danger!!!
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1795917056
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795917054}
+  m_CullTransparentMesh: 1
+--- !u!224 &1795917057
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795917054}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.5498, y: 2.5498, z: 2.5498}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 654284108}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -4, y: -262}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1797872002
 GameObject:
   m_ObjectHideFlags: 0
@@ -140348,6 +140829,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -141645,6 +142128,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1849251304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142397,6 +142883,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1854709681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143248,6 +143737,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -145673,6 +146164,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1906442283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146576,6 +147070,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -146758,6 +147254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -147369,6 +147867,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1920740032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149022,6 +149523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -150844,6 +151347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -151122,6 +151627,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &1956761863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152371,6 +152879,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -153818,6 +154328,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -156306,6 +156818,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -156688,6 +157202,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &2012924353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156920,6 +157437,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -158879,6 +159398,9 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
+  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  shakeDuration: 0.6
+  shakeMagnitude: 0.3
 --- !u!114 &2033999969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163971,6 +164493,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -164575,6 +165099,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -164924,6 +165450,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -167305,6 +167833,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47197f9c1677bab429650da01c162edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overrideForceRequired: 1
+  forceRequired: 5
   glowColor: {r: 0, g: 0, b: 1, a: 1}
   glowIntensity: 2.5
   pulse: 1
@@ -169725,3 +170255,5 @@ SceneRoots:
   - {fileID: 213583745}
   - {fileID: 703294171}
   - {fileID: 416637983}
+  - {fileID: 1592560674}
+  - {fileID: 948940318}

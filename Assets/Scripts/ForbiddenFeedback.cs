@@ -22,7 +22,13 @@ public class ForbiddenFeedback : MonoBehaviour
 
     [Header("World Effects")]
     public GameObject explosionPrefab;
+    [Tooltip("Multiplies the explosion prefab's own scale. 1 = original size.")]
+    public Vector3 explosionScale = Vector3.one;
     public GameObject smokePrefab;
+    [Tooltip("Multiplies the smoke prefab's own scale. 1 = original size.")]
+    public Vector3 smokeScale = Vector3.one;
+    [Tooltip("If on, the effects are also scaled by the destroyed object's size (bigger object = bigger effect).")]
+    public bool scaleWithObjectSize = false;
     [Tooltip("Spawned effects are destroyed after this many seconds.")]
     public float effectLifetime = 6f;
 
@@ -45,11 +51,16 @@ public class ForbiddenFeedback : MonoBehaviour
 
     public void Play(Vector3 position, string message, float shakeDuration, float shakeMagnitude)
     {
-        if (explosionPrefab != null)
-            Destroy(Instantiate(explosionPrefab, position, Quaternion.identity), effectLifetime);
+        Play(position, Vector3.one, message, shakeDuration, shakeMagnitude);
+    }
 
-        if (smokePrefab != null)
-            Destroy(Instantiate(smokePrefab, position, Quaternion.identity), effectLifetime);
+    /// <param name="objectScale">Scale of the destroyed object, only used when Scale With Object Size is on.</param>
+    public void Play(Vector3 position, Vector3 objectScale, string message, float shakeDuration, float shakeMagnitude)
+    {
+        Vector3 extra = scaleWithObjectSize ? objectScale : Vector3.one;
+
+        SpawnEffect(explosionPrefab, position, explosionScale, extra);
+        SpawnEffect(smokePrefab, position, smokeScale, extra);
 
         if (secondMonitorShake != null)
             secondMonitorShake.Shake(shakeDuration, shakeMagnitude);
@@ -59,6 +70,16 @@ public class ForbiddenFeedback : MonoBehaviour
             if (popupRoutine != null) StopCoroutine(popupRoutine);
             popupRoutine = StartCoroutine(ShowPopup(message));
         }
+    }
+
+    void SpawnEffect(GameObject prefab, Vector3 position, Vector3 scale, Vector3 extra)
+    {
+        if (prefab == null) return;
+
+        GameObject fx = Instantiate(prefab, position, Quaternion.identity);
+        // Multiply the prefab's own scale so its original size is kept as the baseline
+        fx.transform.localScale = Vector3.Scale(Vector3.Scale(fx.transform.localScale, scale), extra);
+        Destroy(fx, effectLifetime);
     }
 
     IEnumerator ShowPopup(string message)

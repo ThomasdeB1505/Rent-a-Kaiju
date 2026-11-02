@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 2039a0ad0a9d05549928b70362f54902, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: e391f00234292cc4f935308c11cf0e54, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -13319,9 +13319,9 @@ MonoBehaviour:
   customBlip: {fileID: 0}
   customChannelBlips: []
   customPlayer: {fileID: 0}
-  customFrame: {fileID: 21300000, guid: e86c58c39188bdc4daa8a2c7493bf837, type: 3}
-  frameScale: 1.23
-  frameOffset: {x: 7.98, y: -25.9}
+  customFrame: {fileID: 0}
+  frameScale: 1
+  frameOffset: {x: 0, y: 0}
   customMapMask: {fileID: 0}
   tintCustomSprites: 0
   tintBlipsWithChannelColor: 1
@@ -13407,7 +13407,7 @@ MonoBehaviour:
   onRadarDeactivated:
     m_PersistentCalls:
       m_Calls: []
-  listenForKey: 0
+  listenForKey: 1
 --- !u!114 &197154599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21593,7 +21593,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &297031149
@@ -35799,8 +35799,8 @@ MonoBehaviour:
   - {fileID: 324022403}
   - {fileID: 1058386538}
   - {fileID: 1144659895}
-  displayIndex: 0
-  splitScreenFallback: 0
+  displayIndex: 1
+  splitScreenFallback: 1
 --- !u!4 &477256964
 Transform:
   m_ObjectHideFlags: 0
@@ -41772,7 +41772,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &556587856
@@ -54197,7 +54197,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &710957434
@@ -59525,7 +59525,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &784857118
@@ -66890,7 +66890,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &896868341
@@ -70310,7 +70310,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &944902293
@@ -77808,7 +77808,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1048275990
@@ -83225,7 +83225,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1122066237
@@ -91971,7 +91971,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1230632530
@@ -94816,7 +94816,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1266000988
@@ -102130,7 +102130,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1364238607
@@ -107352,7 +107352,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1429360704
@@ -117223,7 +117223,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1551153297
@@ -120431,6 +120431,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6787512358847295524, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 41dbc7999fd47a449b9e9276f49b2e87, type: 2}
     - target: {fileID: 919132149155446097, guid: b72952d109d0b4044a047a8d5e502773, type: 3}
       propertyPath: m_Name
       value: Ground and Streets and Mountains (Version 4)
@@ -123932,7 +123936,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1639865740
@@ -128714,7 +128718,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1703706671
@@ -130695,7 +130699,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1720176183
@@ -132273,7 +132277,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1742873877
@@ -133149,7 +133153,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1748292663
@@ -135284,7 +135288,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1777102847
@@ -136041,7 +136045,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1785156687
@@ -142320,7 +142324,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1849251304
@@ -143075,7 +143079,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1854709681
@@ -146357,7 +146361,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1906442283
@@ -148062,7 +148066,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1920740032
@@ -151687,7 +151691,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &1956761863
@@ -157265,7 +157269,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &2012924353
@@ -159462,7 +159466,7 @@ MonoBehaviour:
   glowIntensity: 2.5
   pulse: 1
   pulseSpeed: 2
-  popupMessage: FORBIDDEN OBJECT DESTROYED!
+  popupMessage: '!DANGER!'
   shakeDuration: 0.6
   shakeMagnitude: 0.3
 --- !u!114 &2033999969

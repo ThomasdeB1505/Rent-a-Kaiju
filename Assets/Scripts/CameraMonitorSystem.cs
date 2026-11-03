@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using UnityEngine.Rendering.Universal;
 
 /// <summary>
 /// Replaces CameraSwitcher. Shows every camera of the current "page" on its own screen (RawImage),
@@ -358,7 +359,15 @@ public class CameraMonitorSystem : MonoBehaviour
 
     void InitSlot(MonitorSlot s)
     {
-        if (s.camera != null) s.camera.enabled = false; // we switch it on only on the frames it should render
+        if (s.camera != null)
+        {
+            s.camera.enabled = false;
+            s.camera.allowHDR = true;
+
+            var data = s.camera.GetUniversalAdditionalCameraData();
+            data.renderPostProcessing = true;
+        }
+
         s.state = FeedState.Unknown;
         s.bound = false;
         s.hasRenderedOnce = false;
@@ -861,7 +870,11 @@ public class CameraMonitorSystem : MonoBehaviour
     void EnsureRT(MonitorSlot s)
     {
         if (s.renderTexture != null) return;
-        s.renderTexture = new RenderTexture(Mathf.Max(16, feedResolution.x), Mathf.Max(16, feedResolution.y), 16)
+        s.renderTexture = new RenderTexture(
+            Mathf.Max(16, feedResolution.x),
+            Mathf.Max(16, feedResolution.y),
+            16,
+            RenderTextureFormat.DefaultHDR)
         {
             name = "CameraFeed",
             filterMode = FilterMode.Bilinear
@@ -872,7 +885,11 @@ public class CameraMonitorSystem : MonoBehaviour
     void EnsureZoomRT()
     {
         if (zoomRT != null) return;
-        zoomRT = new RenderTexture(Mathf.Max(16, zoomResolution.x), Mathf.Max(16, zoomResolution.y), 24)
+        zoomRT = new RenderTexture(
+            Mathf.Max(16, zoomResolution.x),
+            Mathf.Max(16, zoomResolution.y),
+            24,
+            RenderTextureFormat.DefaultHDR)
         {
             name = "CameraFeedZoom",
             filterMode = FilterMode.Bilinear

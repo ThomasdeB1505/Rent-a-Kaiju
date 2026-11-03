@@ -4,6 +4,10 @@ using DiabolicalGames;
 [DisallowMultipleComponent]
 public class ObjectiveTarget : MonoBehaviour
 {
+    [Header("Level")]
+    [Tooltip("Which area this objective belongs to (0 = first area, 1 = second). Set automatically by BuildingSpawner.")]
+    public int areaIndex = 0;
+
     [Header("Settings Source")]
     [Tooltip("If on, values below are pulled from the scene's ObjectiveSettings. Turn off to use this prefab's own values.")]
     public bool useGlobalSettings = true;

@@ -41,6 +41,21 @@ public class CameraMonitorSystem : MonoBehaviour
         [NonSerialized] public bool bound;
         [NonSerialized] public bool hasRenderedOnce;
         [NonSerialized] public float nextRenderTime;
+
+        [Header("Look Around (while zoomed)")]
+        [Tooltip("Allow the player to move this camera with the arrow keys while it is zoomed in.")]
+        public bool allowLook = true;
+
+        [Tooltip("Tick to use the range below instead of the global 'Look Range'.")]
+        public bool useCustomLookRange = false;
+
+        [Tooltip("Max degrees from the starting direction. X = left/right (yaw), Y = up/down (pitch).")]
+        public Vector2 customLookRange = new Vector2(30f, 15f);
+
+        [NonSerialized] public Quaternion lookBaseRotation;
+        [NonSerialized] public bool lookBaseCaptured;
+        [NonSerialized] public Vector2 lookTarget;   // where the player wants to look (degrees)
+        [NonSerialized] public Vector2 lookAngles;   // smoothed, what is actually applied
     }
 
     [Serializable]
@@ -141,6 +156,28 @@ public class CameraMonitorSystem : MonoBehaviour
 
     [Tooltip("Objects hidden while a screen is fully zoomed in (e.g. the overview background art).")]
     public GameObject[] hideWhenZoomed;
+
+    [Header("Zoomed Camera Look")]
+    [Tooltip("Arrow keys move the zoomed-in camera a little. Only the selected camera, only while zoomed in.")]
+    public bool enableLook = true;
+
+    [Tooltip("Default range in degrees each way from the camera's starting direction. X = left/right, Y = up/down. " +
+             "Set to 0 on an axis to lock it. Slots can override this.")]
+    public Vector2 lookRange = new Vector2(30f, 15f);
+
+    [Tooltip("Degrees per second while a key is held.")]
+    public float lookSpeed = 40f;
+
+    [Tooltip("How smoothly the camera follows. Higher = snappier, 0 = instant.")]
+    public float lookSmoothing = 10f;
+
+    public bool invertVertical = false;
+
+    [Tooltip("Return the camera to its starting direction when zooming out.")]
+    public bool resetLookOnZoomOut = true;
+
+    [Tooltip("Allow moving the camera while the zoom-in animation is still playing.")]
+    public bool lookWhileZoomingIn = false;
 
     [Header("Selection Look")]
     public Color selectedColor = Color.white;
@@ -264,6 +301,7 @@ public class CameraMonitorSystem : MonoBehaviour
     {
         HandleInput();
         UpdateZoomAnimation();
+        UpdateLook();          // <-- add this line
         AnimateStatic();
     }
 
@@ -358,11 +396,13 @@ public class CameraMonitorSystem : MonoBehaviour
 
     void InitSlot(MonitorSlot s)
     {
-        if (s.camera != null) s.camera.enabled = false; // we switch it on only on the frames it should render
+        if (s.camera != null) s.camera.enabled = false;
         s.state = FeedState.Unknown;
         s.bound = false;
         s.hasRenderedOnce = false;
         s.nextRenderTime = 0f;
+        s.lookBaseCaptured = false;                 // <-- add
+        s.lookTarget = s.lookAngles = Vector2.zero; // <-- add
     }
 
     static Texture2D BuildNoiseTexture(int size)
@@ -1019,6 +1059,8 @@ public class CameraMonitorSystem : MonoBehaviour
         rt.offsetMin = savedLayout.offsetMin;
         rt.offsetMax = savedLayout.offsetMax;
 
+        if (resetLookOnZoomOut) ResetLook(zoomedSlot);
+
         zoomedSlot = null;
         zoomT = 0f;
         zoomTarget = 0f;
@@ -1030,6 +1072,75 @@ public class CameraMonitorSystem : MonoBehaviour
         if (hideWhenZoomed == null) return;
         foreach (var go in hideWhenZoomed)
             if (go != null) go.SetActive(!hidden);
+    }
+
+    // ------------------------------------------------------------------ zoomed camera look
+
+    Vector2 GetLookRange(MonitorSlot s)
+    {
+        Vector2 r = s.useCustomLookRange ? s.customLookRange : lookRange;
+        return new Vector2(Mathf.Max(0f, r.x), Mathf.Max(0f, r.y));
+    }
+
+    void UpdateLook()
+    {
+        var s = zoomedSlot;
+        if (s == null || !enableLook || !s.allowLook) return;
+        if (s.state != FeedState.Live || s.camera == null) return;
+
+        // Remember the camera's original rotation the first time we touch it.
+        if (!s.lookBaseCaptured)
+        {
+            s.lookBaseRotation = s.camera.transform.localRotation;
+            s.lookBaseCaptured = true;
+        }
+
+        float dt = Time.unscaledDeltaTime;
+        Vector2 range = GetLookRange(s);
+
+        if (zoomTarget <= 0.5f)
+        {
+            // Zooming out
+            if (resetLookOnZoomOut) s.lookTarget = Vector2.zero;
+        }
+        else if (zoomT >= 1f || lookWhileZoomingIn)
+        {
+            Vector2 input = Vector2.zero;
+            if (Input.GetKey(leftKey)) input.x -= 1f;
+            if (Input.GetKey(rightKey)) input.x += 1f;
+            if (Input.GetKey(upKey)) input.y += 1f;
+            if (Input.GetKey(downKey)) input.y -= 1f;
+            if (invertVertical) input.y = -input.y;
+
+            s.lookTarget += input * lookSpeed * dt;
+        }
+
+        s.lookTarget.x = Mathf.Clamp(s.lookTarget.x, -range.x, range.x);
+        s.lookTarget.y = Mathf.Clamp(s.lookTarget.y, -range.y, range.y);
+
+        s.lookAngles = lookSmoothing <= 0f
+            ? s.lookTarget
+            : Vector2.Lerp(s.lookAngles, s.lookTarget, 1f - Mathf.Exp(-lookSmoothing * dt));
+
+        ApplyLook(s);
+    }
+
+    void ApplyLook(MonitorSlot s)
+    {
+        if (s.camera == null || !s.lookBaseCaptured) return;
+
+        // lookAngles.y > 0 = look up (a negative X rotation in Unity)
+        s.camera.transform.localRotation =
+            s.lookBaseRotation * Quaternion.Euler(-s.lookAngles.y, s.lookAngles.x, 0f);
+    }
+
+    void ResetLook(MonitorSlot s)
+    {
+        if (s == null) return;
+        s.lookTarget = Vector2.zero;
+        s.lookAngles = Vector2.zero;
+        if (s.camera != null && s.lookBaseCaptured)
+            s.camera.transform.localRotation = s.lookBaseRotation;
     }
 
     // ------------------------------------------------------------------ selection highlight

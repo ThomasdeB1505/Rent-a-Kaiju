@@ -13,8 +13,19 @@ public class FirstPersonMovement : MonoBehaviour
     public float runSpeed = 9;
     public KeyCode runningKey = KeyCode.LeftShift;
 
-    [Header("Tank Turning")]
+    [Header("Katamari Controls")]
+    [Tooltip("Left stick: push forward.")]
+    public KeyCode leftForwardKey = KeyCode.W;
+    [Tooltip("Left stick: pull back.")]
+    public KeyCode leftBackKey = KeyCode.S;
+    [Tooltip("Right stick: push forward.")]
+    public KeyCode rightForwardKey = KeyCode.I;
+    [Tooltip("Right stick: pull back.")]
+    public KeyCode rightBackKey = KeyCode.K;
+    [Tooltip("Turn speed in degrees/second when the sticks are fully opposed (one forward, one back). Using only one stick turns at half of this.")]
     public float turnSpeed = 120f;
+    [Tooltip("Off: a single stick only pivots you on the spot. On: a single stick also moves you at half speed while turning (true tank-drive arcing).")]
+    public bool arcWhileTurning = false;
 
     [Header("Push Force")]
     [Tooltip("Force applied to things you walk into.")]
@@ -87,6 +98,15 @@ public class FirstPersonMovement : MonoBehaviour
         }
     }
 
+    /// <summary>Reads one "stick": +1 pushed forward, -1 pulled back, 0 neutral (or both pressed).</summary>
+    static float ReadStick(KeyCode forwardKey, KeyCode backKey)
+    {
+        float value = 0f;
+        if (Input.GetKey(forwardKey)) value += 1f;
+        if (Input.GetKey(backKey)) value -= 1f;
+        return value;
+    }
+
     void FixedUpdate()
     {
         IsRunning = canRun && !movementLocked && Input.GetKey(runningKey);
@@ -101,10 +121,29 @@ public class FirstPersonMovement : MonoBehaviour
         // without fighting our own script-driven Y rotation below.
         rigidbody.angularVelocity = Vector3.zero;
 
-        float turn = movementLocked ? 0f : Input.GetAxis("Horizontal");
+        // --- Katamari / tank-style controls ---
+        // Left stick:  W (forward) / S (back)
+        // Right stick: I (forward) / K (back)
+        float left = movementLocked ? 0f : ReadStick(leftForwardKey, leftBackKey);
+        float right = movementLocked ? 0f : ReadStick(rightForwardKey, rightBackKey);
+
+        // Positive turn = clockwise (right). Left pushed / right pulled = turn right.
+        //   left back,  right neutral -> -0.5 (slow left)
+        //   left neutral, right forward -> -0.5 (slow left)
+        //   left back,  right forward -> -1.0 (fast left)
+        float turn = (left - right) * 0.5f;
+
+        // Both sticks the same direction = full forward/back.
+        float forward = (left + right) * 0.5f;
+        if (!arcWhileTurning && !Mathf.Approximately(left, right))
+        {
+            // Sticks disagree: only pivot, don't drift forward/back.
+            forward = 0f;
+        }
+
         transform.Rotate(Vector3.up, turn * turnSpeed * Time.fixedDeltaTime, Space.World);
 
-        float forwardInput = movementLocked ? 0f : Input.GetAxis("Vertical") * targetMovingSpeed;
+        float forwardInput = forward * targetMovingSpeed;
         Vector3 targetVelocity = transform.rotation * new Vector3(0, 0, forwardInput);
         intendedMoveVelocity = targetVelocity;
         targetVelocity.y = rigidbody.linearVelocity.y;

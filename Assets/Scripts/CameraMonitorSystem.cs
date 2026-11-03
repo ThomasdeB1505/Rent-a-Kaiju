@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -68,8 +69,33 @@ public class CameraMonitorSystem : MonoBehaviour
     [Header("Pages")]
     public List<CameraPage> pages = new List<CameraPage> { new CameraPage() };
 
-    [Tooltip("Jump to a page as soon as it is unlocked. If off, the player switches with the page key.")]
+    [Tooltip("Jump to a page as soon as it is unlocked. If off, the player switches with the page keys.")]
     public bool autoSwitchToUnlockedPage = false;
+
+    [Tooltip("If on, pressing next on the last page wraps around to the first (and the reverse), so it never shakes. " +
+             "If off, pages are laid out left to right and the end of the row shakes.")]
+    public bool wrapPages = false;
+
+    [Header("Page Slide")]
+    [Tooltip("Seconds for the side-to-side slide between pages. 0 = instant switch.")]
+    public float pageSlideDuration = 0.4f;
+    public AnimationCurve pageSlideCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    [Tooltip("How far the pages travel, as a multiple of the display width. 1 = a full screen width.")]
+    public float pageSlideDistance = 1f;
+
+    [Header("Edge Shake (no page on that side)")]
+    [Tooltip("Seconds the shake lasts. 0 = no shake.")]
+    public float shakeDuration = 0.3f;
+
+    [Tooltip("Size of the shake in canvas units (roughly pixels).")]
+    public float shakeStrength = 20f;
+
+    [Tooltip("How many back-and-forth swings the shake has.")]
+    public float shakeCycles = 3f;
+
+    [Tooltip("Optional. Extra UI (e.g. the console background art) that shakes together with the current page.")]
+    public RectTransform[] extraShakeTargets;
 
     [Header("Controls (old Input Manager)")]
     public KeyCode leftKey = KeyCode.LeftArrow;
@@ -83,10 +109,10 @@ public class CameraMonitorSystem : MonoBehaviour
     [Tooltip("Extra key that only zooms out. Set to None to disable.")]
     public KeyCode zoomOutKey = KeyCode.Escape;
 
-    [Tooltip("Cycles to the next unlocked page.")]
+    [Tooltip("Slides to the next unlocked page (pages sit to the right). Shakes the screen if there is none.")]
     public KeyCode nextPageKey = KeyCode.Tab;
 
-    [Tooltip("Cycles to the previous unlocked page. None = disabled.")]
+    [Tooltip("Slides back to the previous unlocked page (pages sit to the left). Shakes the screen if there is none. None = disabled.")]
     public KeyCode previousPageKey = KeyCode.None;
 
     [Header("Display")]
@@ -159,12 +185,14 @@ public class CameraMonitorSystem : MonoBehaviour
     public event Action<int, int> SelectionChanged;    // page, slot
     public event Action<bool> ZoomChanged;             // true = zooming in, false = zooming out (fires when the transition starts)
     public event Action<int, int> FeedLost;            // page, slot: a live camera was destroyed / deactivated
+    public event Action<int> PageEdgeHit;              // -1 = tried to go left, +1 = tried to go right (use for a bump sound)
 
     // ------------------------------------------------------------------ public state
 
     public int CurrentPage => currentPage;
     public int SelectedIndex => selectedIndex;
     public bool IsZoomed => zoomedSlot != null && zoomTarget > 0.5f;
+    public bool IsTransitioning => transitioning;
 
     // ------------------------------------------------------------------ private state
 
@@ -178,6 +206,10 @@ public class CameraMonitorSystem : MonoBehaviour
     }
 
     bool ready;
+    bool transitioning;
+    Coroutine shakeRoutine;
+    List<RectTransform> shakeTargets;
+    readonly Dictionary<RectTransform, Vector2> restPos = new Dictionary<RectTransform, Vector2>();
     int currentPage = -1;
     int selectedIndex;
 
@@ -367,8 +399,10 @@ public class CameraMonitorSystem : MonoBehaviour
             return;
         }
 
-        if (Pressed(nextPageKey)) CyclePage(1);
-        if (Pressed(previousPageKey)) CyclePage(-1);
+        if (transitioning) return; // ignore input while pages are sliding
+
+        if (Pressed(nextPageKey)) TryChangePage(1);
+        else if (Pressed(previousPageKey)) TryChangePage(-1);
 
         var page = CurrentPageData;
         if (page == null || page.slots.Length == 0) return;
@@ -439,8 +473,8 @@ public class CameraMonitorSystem : MonoBehaviour
         p.unlocked = true;
         PageUnlocked?.Invoke(index);
 
-        if (zoomedSlot == null && (currentPage < 0 || autoSwitchToUnlockedPage))
-            ShowPage(index);
+        if (zoomedSlot == null && !transitioning && (currentPage < 0 || autoSwitchToUnlockedPage))
+            ShowPage(index, currentPage < 0 ? 0 : (index > currentPage ? 1 : -1));
     }
 
     public bool IsPageUnlocked(int index)
@@ -450,37 +484,65 @@ public class CameraMonitorSystem : MonoBehaviour
 
     public bool SetPage(int index)
     {
-        if (!IsPageUnlocked(index) || index == currentPage || zoomedSlot != null) return false;
-        ShowPage(index);
+        if (!IsPageUnlocked(index) || index == currentPage || zoomedSlot != null || transitioning) return false;
+        ShowPage(index, currentPage < 0 ? 0 : (index > currentPage ? 1 : -1));
         return true;
     }
 
-    public void CyclePage(int direction)
+    /// <summary>
+    /// Slides to the next (+1) or previous (-1) unlocked page.
+    /// If there is no page on that side, the screen shakes instead and this returns false.
+    /// </summary>
+    public bool TryChangePage(int direction)
     {
-        if (zoomedSlot != null || pages.Count == 0) return;
+        if (zoomedSlot != null || transitioning || direction == 0 || pages.Count == 0) return false;
+        direction = direction > 0 ? 1 : -1;
 
         int n = pages.Count;
-        for (int step = 1; step <= n; step++)
+        int target = -1;
+
+        if (wrapPages)
         {
-            int idx = (((currentPage + direction * step) % n) + n) % n;
-            if (idx == currentPage) continue;
-            if (pages[idx].unlocked) { ShowPage(idx); return; }
+            for (int step = 1; step < n; step++)
+            {
+                int idx = (((currentPage + direction * step) % n) + n) % n;
+                if (pages[idx].unlocked) { target = idx; break; }
+            }
         }
+        else
+        {
+            for (int i = currentPage + direction; i >= 0 && i < n; i += direction)
+            {
+                if (pages[i].unlocked) { target = i; break; }
+            }
+        }
+
+        if (target < 0 || target == currentPage)
+        {
+            PlayEdgeShake(direction);
+            return false;
+        }
+
+        ShowPage(target, direction);
+        return true;
     }
 
-    void ShowPage(int index)
+    public void CyclePage(int direction) => TryChangePage(direction);
+
+    /// <param name="direction">+1 = new page slides in from the right, -1 = from the left, 0 = instant switch.</param>
+    void ShowPage(int index, int direction = 0)
     {
-        if (currentPage >= 0 && currentPage < pages.Count)
+        CancelShake();
+
+        CameraPage oldPage = (currentPage >= 0 && currentPage < pages.Count) ? pages[currentPage] : null;
+        if (oldPage != null)
         {
-            var old = pages[currentPage];
-            foreach (var s in old.slots)
+            foreach (var s in oldPage.slots)
                 if (s.camera != null) s.camera.enabled = false;
-            SetPageVisible(old, false);
         }
 
         currentPage = index;
         var page = pages[index];
-        SetPageVisible(page, true);
 
         selectedIndex = Mathf.Clamp(page.lastSelected, 0, Mathf.Max(0, page.slots.Length - 1));
 
@@ -492,7 +554,141 @@ public class CameraMonitorSystem : MonoBehaviour
         }
 
         ApplyTints();
+
+        bool animate = oldPage != null && oldPage != page && direction != 0 && pageSlideDuration > 0f;
+        if (animate)
+        {
+            transitioning = true;
+            StartCoroutine(PageSlide(oldPage, page, direction));
+        }
+        else
+        {
+            if (oldPage != null) SetPageVisible(oldPage, false);
+            SetPageVisible(page, true);
+        }
+
         PageChanged?.Invoke(index);
+    }
+
+    // ------------------------------------------------------------------ page slide + edge shake
+
+    /// <summary>The RectTransforms that make up a page: its Page Root, or else each of its screens.</summary>
+    List<RectTransform> GetPageTargets(CameraPage p)
+    {
+        var list = new List<RectTransform>();
+
+        if (p.pageRoot != null)
+        {
+            var rt = p.pageRoot.transform as RectTransform;
+            if (rt != null) { list.Add(rt); return list; }
+        }
+
+        foreach (var s in p.slots)
+            if (s.screen != null) list.Add(s.screen.rectTransform);
+
+        return list;
+    }
+
+    Vector2 RestPos(RectTransform rt)
+    {
+        if (!restPos.TryGetValue(rt, out var pos))
+        {
+            pos = rt.anchoredPosition;
+            restPos[rt] = pos;
+        }
+        return pos;
+    }
+
+    /// <summary>Moves every target to its resting position plus an offset.</summary>
+    void SetOffset(List<RectTransform> targets, Vector2 offset)
+    {
+        if (targets == null) return;
+        foreach (var rt in targets)
+            if (rt != null) rt.anchoredPosition = RestPos(rt) + offset;
+    }
+
+    IEnumerator PageSlide(CameraPage oldPage, CameraPage newPage, int direction)
+    {
+        var oldTargets = GetPageTargets(oldPage);
+        var newTargets = GetPageTargets(newPage);
+
+        // Remember where everything rests before anything is moved.
+        foreach (var rt in oldTargets) RestPos(rt);
+        foreach (var rt in newTargets) RestPos(rt);
+
+        float width = (zoomLayer != null ? zoomLayer.rect.width : 1920f) * pageSlideDistance;
+
+        // Put the new page just off-screen before it becomes visible, so it never flashes in place.
+        SetOffset(newTargets, new Vector2(direction * width, 0f));
+        SetPageVisible(newPage, true);
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t = Mathf.Min(1f, t + Time.unscaledDeltaTime / Mathf.Max(0.01f, pageSlideDuration));
+            float k = pageSlideCurve.Evaluate(t);
+
+            // Old page leaves the opposite way the new one arrives.
+            SetOffset(oldTargets, new Vector2(-direction * width * k, 0f));
+            SetOffset(newTargets, new Vector2(direction * width * (1f - k), 0f));
+            yield return null;
+        }
+
+        SetOffset(oldTargets, Vector2.zero);
+        SetOffset(newTargets, Vector2.zero);
+        SetPageVisible(oldPage, false);
+
+        transitioning = false;
+    }
+
+    void PlayEdgeShake(int direction)
+    {
+        PageEdgeHit?.Invoke(direction);
+
+        if (shakeDuration <= 0f || shakeStrength <= 0f) return;
+
+        var page = CurrentPageData;
+        if (page == null) return;
+
+        CancelShake();
+
+        shakeTargets = GetPageTargets(page);
+        if (extraShakeTargets != null)
+            foreach (var rt in extraShakeTargets)
+                if (rt != null && !shakeTargets.Contains(rt)) shakeTargets.Add(rt);
+
+        shakeRoutine = StartCoroutine(ShakeRoutine(shakeTargets, direction));
+    }
+
+    IEnumerator ShakeRoutine(List<RectTransform> targets, int direction)
+    {
+        foreach (var rt in targets) RestPos(rt);
+
+        float elapsed = 0f;
+        while (elapsed < 1f)
+        {
+            elapsed = Mathf.Min(1f, elapsed + Time.unscaledDeltaTime / shakeDuration);
+
+            float decay = (1f - elapsed) * (1f - elapsed);
+
+            // The first swing pushes towards the missing page, then it rebounds and settles.
+            float x = direction * Mathf.Sin(elapsed * shakeCycles * Mathf.PI * 2f) * shakeStrength * decay;
+            float y = Random.Range(-1f, 1f) * shakeStrength * 0.15f * decay;
+
+            SetOffset(targets, new Vector2(x, y));
+            yield return null;
+        }
+
+        SetOffset(targets, Vector2.zero);
+        shakeRoutine = null;
+    }
+
+    void CancelShake()
+    {
+        if (shakeRoutine == null) return;
+        StopCoroutine(shakeRoutine);
+        shakeRoutine = null;
+        SetOffset(shakeTargets, Vector2.zero);
     }
 
     static void SetPageVisible(CameraPage p, bool visible)
@@ -713,6 +909,9 @@ public class CameraMonitorSystem : MonoBehaviour
         var s = GetSlot(CurrentPageData, selectedIndex);
         if (s == null || s.screen == null) return;
         if (s.state != FeedState.Live && !allowZoomOnStatic) return;
+        if (transitioning) return;
+
+        CancelShake(); // snap everything back to rest so the zoom starts from the true position
 
         // Move the screen into the zoom layer so it can cover the whole display, keeping its current look.
         var rt = s.screen.rectTransform;

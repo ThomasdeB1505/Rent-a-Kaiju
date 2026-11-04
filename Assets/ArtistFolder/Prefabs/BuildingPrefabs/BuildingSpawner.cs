@@ -22,9 +22,15 @@ public class BuildingEntry
 /// Then picks random spawn points and adds the ObjectiveTarget component to
 /// 'objectiveCount' of them and the ForbiddenTarget component to 'forbiddenCount' of them.
 /// Any building prefab can become an objective or a forbidden building.
+/// Use one BuildingSpawner per area and give each its own Area Index.
 /// </summary>
 public class BuildingSpawner : MonoBehaviour
 {
+    [Header("Level")]
+    [Tooltip("Which area this spawner's buildings belong to (0 = first area, 1 = second). " +
+             "Objectives spawned here count towards that area's wall in LevelProgressionController.")]
+    [Min(0)][SerializeField] private int areaIndex = 0;
+
     [Header("Spawn Points")]
     [Tooltip("Parent object whose direct children are the spawn point empties.")]
     [SerializeField] private Transform spawnPointsParent;
@@ -126,7 +132,7 @@ public class BuildingSpawner : MonoBehaviour
             if (instance == null) continue;
 
             if (i < objectives)
-                AddOnce<ObjectiveTarget>(instance);
+                AddOnce<ObjectiveTarget>(instance).areaIndex = areaIndex;
             else if (i < objectives + forbidden)
                 AddOnce<ForbiddenTarget>(instance);
         }
@@ -257,10 +263,12 @@ public class BuildingSpawner : MonoBehaviour
     }
 
     // Adds the component unless the prefab already has it (both scripts allow only one per object).
-    private static void AddOnce<T>(GameObject go) where T : Component
+    // Returns the component so callers can configure it.
+    private static T AddOnce<T>(GameObject go) where T : Component
     {
-        if (!go.TryGetComponent(out T _))
-            go.AddComponent<T>();
+        if (!go.TryGetComponent(out T existing))
+            existing = go.AddComponent<T>();
+        return existing;
     }
 
     private void ClearSpawned()

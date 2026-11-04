@@ -186,7 +186,7 @@ public class KaijuDetectionHUD : MonoBehaviour
 
         if (camList.Count > 1)
         {
-            sb.Append(" (and ");
+            sb.Append(" (AND ");
             for (int i = 1; i < camList.Count; i++)
             {
                 sb.Append(camList[i]);

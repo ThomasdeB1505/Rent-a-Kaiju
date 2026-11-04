@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// Scene-wide handler for "you destroyed a forbidden object" feedback:
-/// second-monitor screen shake, popup text, and explosion + smoke at the object.
+/// second-monitor screen shake, popup text, explosion + smoke, and sound effects.
 /// </summary>
 public class ForbiddenFeedback : MonoBehaviour
 {
@@ -27,12 +27,19 @@ public class ForbiddenFeedback : MonoBehaviour
     public GameObject smokePrefab;
     [Tooltip("Multiplies the smoke prefab's own scale. 1 = original size.")]
     public Vector3 smokeScale = Vector3.one;
-    [Tooltip("If on, the effects are also scaled by the destroyed object's size (bigger object = bigger effect).")]
+    [Tooltip("If on, the effects are also scaled by the destroyed object's size.")]
     public bool scaleWithObjectSize = false;
     [Tooltip("Spawned effects are destroyed after this many seconds.")]
     public float effectLifetime = 6f;
 
+    [Header("Audio")]
+    [Tooltip("Sound effects played when a forbidden object is destroyed. One is picked randomly.")]
+    public AudioClip[] destructionSounds;
+    [Range(0f, 1f)]
+    public float soundVolume = 1f;
+
     private Coroutine popupRoutine;
+    private AudioSource audioSource;
 
     void Awake()
     {
@@ -41,12 +48,45 @@ public class ForbiddenFeedback : MonoBehaviour
         if (activateSecondDisplay && Display.displays.Length > 1)
             Display.displays[1].Activate();
 
-        if (popupText != null) popupText.gameObject.SetActive(false);
+        if (popupText != null)
+            popupText.gameObject.SetActive(false);
+
+        EnsureAudioListener();
+
+        audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f; // 2D audio
+    }
+
+    void EnsureAudioListener()
+    {
+        // Don't add another listener if one already exists.
+        if (FindObjectOfType<AudioListener>() != null)
+            return;
+
+        // Add the listener to the Main Camera.
+        Camera mainCamera = Camera.main;
+
+        if (mainCamera != null)
+        {
+            mainCamera.gameObject.AddComponent<AudioListener>();
+            Debug.Log("ForbiddenFeedback: AudioListener added to Main Camera.");
+        }
+        else
+        {
+            gameObject.AddComponent<AudioListener>();
+            Debug.LogWarning("ForbiddenFeedback: No Main Camera found. AudioListener added to ForbiddenFeedback instead.");
+        }
     }
 
     void OnDestroy()
     {
-        if (Instance == this) Instance = null;
+        if (Instance == this)
+            Instance = null;
     }
 
     public void Play(Vector3 position, string message, float shakeDuration, float shakeMagnitude)
@@ -62,23 +102,44 @@ public class ForbiddenFeedback : MonoBehaviour
         SpawnEffect(explosionPrefab, position, explosionScale, extra);
         SpawnEffect(smokePrefab, position, smokeScale, extra);
 
+        PlayDestructionSound();
+
         if (secondMonitorShake != null)
             secondMonitorShake.Shake(shakeDuration, shakeMagnitude);
 
         if (popupText != null)
         {
-            if (popupRoutine != null) StopCoroutine(popupRoutine);
+            if (popupRoutine != null)
+                StopCoroutine(popupRoutine);
+
             popupRoutine = StartCoroutine(ShowPopup(message));
         }
     }
 
+    void PlayDestructionSound()
+    {
+        if (destructionSounds == null || destructionSounds.Length == 0)
+            return;
+
+        AudioClip clip = destructionSounds[Random.Range(0, destructionSounds.Length)];
+
+        if (clip != null)
+            audioSource.PlayOneShot(clip, soundVolume);
+    }
+
     void SpawnEffect(GameObject prefab, Vector3 position, Vector3 scale, Vector3 extra)
     {
-        if (prefab == null) return;
+        if (prefab == null)
+            return;
 
         GameObject fx = Instantiate(prefab, position, Quaternion.identity);
-        // Multiply the prefab's own scale so its original size is kept as the baseline
-        fx.transform.localScale = Vector3.Scale(Vector3.Scale(fx.transform.localScale, scale), extra);
+
+        // Multiply the prefab's own scale so its original size is kept as the baseline.
+        fx.transform.localScale = Vector3.Scale(
+            Vector3.Scale(fx.transform.localScale, scale),
+            extra
+        );
+
         Destroy(fx, effectLifetime);
     }
 
@@ -88,9 +149,12 @@ public class ForbiddenFeedback : MonoBehaviour
         popupText.gameObject.SetActive(true);
         SetAlpha(1f);
 
-        yield return new WaitForSecondsRealtime(Mathf.Max(0f, popupDuration - popupFadeTime));
+        yield return new WaitForSecondsRealtime(
+            Mathf.Max(0f, popupDuration - popupFadeTime)
+        );
 
         float t = 0f;
+
         while (t < popupFadeTime)
         {
             t += Time.unscaledDeltaTime;

@@ -62461,6 +62461,9 @@ MonoBehaviour:
   smokeScale: {x: 6, y: 6, z: 6}
   scaleWithObjectSize: 1
   effectLifetime: 6
+  destructionSounds:
+  - {fileID: 8300000, guid: 3684da1a39697e4468e6c57edddbedb5, type: 3}
+  soundVolume: 1
 --- !u!4 &948940318
 Transform:
   m_ObjectHideFlags: 0

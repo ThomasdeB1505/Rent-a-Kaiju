@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debrisPrefabs:
   - name: Low
-    prefab: {fileID: 0}
+    prefab: {fileID: 6245390119758588317, guid: ccee012fb5985c243a2ac5f8cec13762, type: 3}
   debrisAmount: 0
   forceRequired: 0
   ignorePlayerCollisions: 1
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 2
-  speed: 6
+  speed: 60
   speedVariance: 0
   randomStartPosition: 0
   patrolDistance: 20
@@ -210,7 +210,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   pingPong: 1
-  hoverHeight: 8
+  hoverHeight: 5
   bobAmount: 0.5
   bobSpeed: 2
   turnSpeed: 6

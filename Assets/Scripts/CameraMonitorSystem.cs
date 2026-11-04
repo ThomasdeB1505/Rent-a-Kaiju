@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -396,13 +397,19 @@ public class CameraMonitorSystem : MonoBehaviour
 
     void InitSlot(MonitorSlot s)
     {
-        if (s.camera != null) s.camera.enabled = false;
+        if (s.camera != null)
+        {
+            s.camera.enabled = false;
+            s.camera.allowHDR = true;
+
+            var data = s.camera.GetUniversalAdditionalCameraData();
+            data.renderPostProcessing = true;
+        }
+
         s.state = FeedState.Unknown;
         s.bound = false;
         s.hasRenderedOnce = false;
         s.nextRenderTime = 0f;
-        s.lookBaseCaptured = false;                 // <-- add
-        s.lookTarget = s.lookAngles = Vector2.zero; // <-- add
     }
 
     static Texture2D BuildNoiseTexture(int size)
@@ -901,7 +908,11 @@ public class CameraMonitorSystem : MonoBehaviour
     void EnsureRT(MonitorSlot s)
     {
         if (s.renderTexture != null) return;
-        s.renderTexture = new RenderTexture(Mathf.Max(16, feedResolution.x), Mathf.Max(16, feedResolution.y), 16)
+        s.renderTexture = new RenderTexture(
+            Mathf.Max(16, feedResolution.x),
+            Mathf.Max(16, feedResolution.y),
+            16,
+            RenderTextureFormat.DefaultHDR)
         {
             name = "CameraFeed",
             filterMode = FilterMode.Bilinear
@@ -912,7 +923,11 @@ public class CameraMonitorSystem : MonoBehaviour
     void EnsureZoomRT()
     {
         if (zoomRT != null) return;
-        zoomRT = new RenderTexture(Mathf.Max(16, zoomResolution.x), Mathf.Max(16, zoomResolution.y), 24)
+        zoomRT = new RenderTexture(
+            Mathf.Max(16, zoomResolution.x),
+            Mathf.Max(16, zoomResolution.y),
+            24,
+            RenderTextureFormat.DefaultHDR)
         {
             name = "CameraFeedZoom",
             filterMode = FilterMode.Bilinear

@@ -31122,22 +31122,49 @@ MonoBehaviour:
     slots:
     - camera: {fileID: 491740742}
       screen: {fileID: 1749212431}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 330624835}
       screen: {fileID: 1782974573}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 497036218}
       screen: {fileID: 811595895}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1185672905}
       screen: {fileID: 523224278}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1785917657}
       screen: {fileID: 290161998}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1239600335}
       screen: {fileID: 191509794}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 324022403}
       screen: {fileID: 2103070902}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1058386538}
       screen: {fileID: 497183002}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1144659895}
       screen: {fileID: 1152107037}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
   - name: Level 2
     unlockedAtStart: 1
     columns: 3
@@ -31145,22 +31172,49 @@ MonoBehaviour:
     slots:
     - camera: {fileID: 491740742}
       screen: {fileID: 2080155338}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 330624835}
       screen: {fileID: 908913765}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 497036218}
       screen: {fileID: 330543659}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1185672905}
       screen: {fileID: 615491321}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1785917657}
       screen: {fileID: 1867794724}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1239600335}
       screen: {fileID: 1082959565}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 324022403}
       screen: {fileID: 376716275}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1058386538}
       screen: {fileID: 1390619250}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
     - camera: {fileID: 1144659895}
       screen: {fileID: 770719981}
+      allowLook: 1
+      useCustomLookRange: 0
+      customLookRange: {x: 30, y: 15}
   autoSwitchToUnlockedPage: 1
   wrapPages: 0
   pageSlideDuration: 0.4
@@ -31233,6 +31287,13 @@ MonoBehaviour:
     m_RotationOrder: 4
   allowZoomOnStatic: 1
   hideWhenZoomed: []
+  enableLook: 1
+  lookRange: {x: 10, y: 5}
+  lookSpeed: 40
+  lookSmoothing: 10
+  invertVertical: 0
+  resetLookOnZoomOut: 1
+  lookWhileZoomingIn: 0
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   unselectedColor: {r: 0.65, g: 0.65, b: 0.65, a: 1}
   selectionHighlight: {fileID: 0}

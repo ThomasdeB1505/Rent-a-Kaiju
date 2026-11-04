@@ -200,8 +200,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 2
-  speed: 60
-  speedVariance: 0
+  speed: 10
+  speedVariance: 0.199
   randomStartPosition: 0
   patrolDistance: 20
   circleRadius: 10

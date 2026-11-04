@@ -20,8 +20,10 @@ using DiabolicalGames;
 ///       destroyed IN THAT AREA. Each area counts separately, so area 0 buildings never count towards
 ///       an area 1 wall. 0 buildings = breakable from the start.
 ///     - Camera Page To Unlock: the page index passed to CameraMonitorSystem.UnlockPage (-1 = none).
+///     - Unlock Message / Unlock Message Duration: optional popup shown when the wall unlocks.
 ///  3. The LAST gate is the final wall. Breaking it plays the comic cutscene, then ends the game.
 ///  4. Untick Auto Win on ObjectiveManager so the end screen only shows after the cutscene.
+///  5. For popups: create a TMP text on your canvas and drag it into Popup Text.
 ///
 /// Walls are locked by setting the DestructibleObject's Force Required to infinity and restoring
 /// the original value when the gate unlocks. Nothing in DestructibleObject needs to change.
@@ -53,6 +55,14 @@ public class LevelProgressionController : MonoBehaviour
         [Tooltip("Optional. Hidden when the wall unlocks (e.g. a barrier effect or 'locked' icon).")]
         public GameObject lockedVisual;
 
+        [Header("Unlock Popup")]
+        [TextArea(1, 3), Tooltip("Text shown on screen when this wall becomes breakable. Leave empty for no popup. {label} is replaced with this gate's label.")]
+        public string unlockMessage = "";
+
+        [Min(0f), Tooltip("Seconds the message stays fully visible (fade in/out is extra).")]
+        public float unlockMessageDuration = 3f;
+
+        [Header("Camera / Events")]
         [Tooltip("Camera page to unlock via CameraMonitorSystem.UnlockPage. -1 = none. Page 2 is index 1.")]
         public int cameraPageToUnlock = -1;
 
@@ -102,6 +112,13 @@ public class LevelProgressionController : MonoBehaviour
     [Tooltip("{0} = buildings destroyed in the current area, {1} = buildings needed for the next wall.")]
     public string progressFormat = "Buildings destroyed: {0}/{1}";
 
+    [Header("Unlock Popup (optional)")]
+    [Tooltip("The TMP text that displays each gate's Unlock Message. Place it wherever you want on your canvas; it is hidden until needed.")]
+    public TMP_Text popupText;
+
+    [Min(0f), Tooltip("Seconds to fade the popup in and out. 0 = instant.")]
+    public float popupFadeTime = 0.35f;
+
     [Header("Debug")]
     public bool logProgress;
 
@@ -111,10 +128,16 @@ public class LevelProgressionController : MonoBehaviour
     bool paused;
     float previousTimeScale = 1f;
 
+    struct PopupRequest { public string text; public float duration; }
+    readonly Queue<PopupRequest> popupQueue = new Queue<PopupRequest>();
+    Coroutine popupRoutine;
+
     // ------------------------------------------------------------------ lifecycle
 
     void Awake()
     {
+        if (popupText != null) popupText.gameObject.SetActive(false);
+
         if (cutscene != null)
         {
             cutscene.playOnStart = false; // we decide when it plays
@@ -180,7 +203,7 @@ public class LevelProgressionController : MonoBehaviour
         else
             Debug.LogWarning("LevelProgressionController: no ObjectiveManager in the scene, so no wall can ever unlock (except ones needing 0 buildings).", this);
 
-        EvaluateGates(); // unlocks any gate that needs 0 buildings
+        EvaluateGates(false); // unlocks any gate that needs 0 buildings, without a popup
     }
 
     void Update()
@@ -200,6 +223,7 @@ public class LevelProgressionController : MonoBehaviour
 
     void OnDestroy()
     {
+        ClearPopup();
         if (manager != null) manager.ObjectiveDestroyed -= OnObjectiveDestroyed;
         if (cutscene != null) cutscene.onFinished.RemoveListener(OnCutsceneFinished);
         RestoreTimeScale();
@@ -209,21 +233,21 @@ public class LevelProgressionController : MonoBehaviour
 
     void OnObjectiveDestroyed(int totalDestroyed)
     {
-        EvaluateGates();
+        EvaluateGates(true);
     }
 
-    void EvaluateGates()
+    void EvaluateGates(bool announce)
     {
         foreach (var g in gates)
         {
             if (g == null || g.unlocked) continue;
-            if (DestroyedInArea(g) >= g.buildingsRequired) Unlock(g);
+            if (DestroyedInArea(g) >= g.buildingsRequired) Unlock(g, announce);
         }
 
         UpdateProgress();
     }
 
-    void Unlock(WallGate g)
+    void Unlock(WallGate g, bool announce)
     {
         if (g.unlocked) return;
         g.unlocked = true;
@@ -235,6 +259,8 @@ public class LevelProgressionController : MonoBehaviour
         if (g.lockedVisual != null) g.lockedVisual.SetActive(false);
         if (!g.unlockCameraPageWhenBroken) UnlockCameraPage(g);
 
+        if (announce) ShowPopup(g);
+
         g.onUnlocked?.Invoke();
     }
 
@@ -243,7 +269,7 @@ public class LevelProgressionController : MonoBehaviour
         g.broken = true;
         Log($"Broken '{g.label}'");
 
-        if (!g.unlocked) Unlock(g); // broken some other way (e.g. a direct Break() call)
+        if (!g.unlocked) Unlock(g, false); // broken some other way (e.g. a direct Break() call)
         if (g.unlockCameraPageWhenBroken) UnlockCameraPage(g);
 
         g.onBroken?.Invoke();
@@ -278,11 +304,69 @@ public class LevelProgressionController : MonoBehaviour
         progressText.text = string.Empty; // every wall is open
     }
 
+    // ------------------------------------------------------------------ popup
+
+    void ShowPopup(WallGate g)
+    {
+        if (popupText == null || string.IsNullOrWhiteSpace(g.unlockMessage)) return;
+
+        popupQueue.Enqueue(new PopupRequest
+        {
+            text = g.unlockMessage.Replace("{label}", g.label),
+            duration = g.unlockMessageDuration
+        });
+
+        if (popupRoutine == null) popupRoutine = StartCoroutine(PopupRoutine());
+    }
+
+    IEnumerator PopupRoutine()
+    {
+        popupText.gameObject.SetActive(true);
+
+        while (popupQueue.Count > 0)
+        {
+            var request = popupQueue.Dequeue();
+            popupText.text = request.text;
+
+            yield return FadePopup(0f, 1f);
+            yield return new WaitForSecondsRealtime(request.duration);
+            yield return FadePopup(1f, 0f);
+        }
+
+        popupText.gameObject.SetActive(false);
+        popupRoutine = null;
+    }
+
+    IEnumerator FadePopup(float from, float to)
+    {
+        if (popupFadeTime <= 0f)
+        {
+            popupText.alpha = to;
+            yield break;
+        }
+
+        for (float t = 0f; t < popupFadeTime; t += Time.unscaledDeltaTime)
+        {
+            popupText.alpha = Mathf.Lerp(from, to, t / popupFadeTime);
+            yield return null;
+        }
+        popupText.alpha = to;
+    }
+
+    void ClearPopup()
+    {
+        popupQueue.Clear();
+        if (popupRoutine != null) StopCoroutine(popupRoutine);
+        popupRoutine = null;
+        if (popupText != null) popupText.gameObject.SetActive(false);
+    }
+
     // ------------------------------------------------------------------ finale
 
     IEnumerator FinaleRoutine()
     {
         finaleStarted = true;
+        ClearPopup();
         Log("Final wall broken, starting finale");
 
         if (cutsceneDelay > 0f) yield return new WaitForSeconds(cutsceneDelay);

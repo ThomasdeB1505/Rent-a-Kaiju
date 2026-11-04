@@ -124,7 +124,7 @@ public class FirstPersonMovement : MonoBehaviour
         // --- Katamari / tank-style controls ---
         // Left stick:  W (forward) / S (back)
         // Right stick: I (forward) / K (back)
-        float left = movementLocked ? 0f : ReadStick(leftForwardKey, leftBackKey);
+        float left  = movementLocked ? 0f : ReadStick(leftForwardKey,  leftBackKey);
         float right = movementLocked ? 0f : ReadStick(rightForwardKey, rightBackKey);
 
         // Positive turn = clockwise (right). Left pushed / right pulled = turn right.
@@ -201,6 +201,11 @@ public class FirstPersonMovement : MonoBehaviour
 
     void UpdateFootsteps()
     {
+        if (Time.frameCount % 30 == 0)
+        {
+            Vector3 dv = rigidbody.linearVelocity;
+            Debug.Log($"[Footsteps] enabled={footstepsEnabled} clips={(footstepClips == null ? -1 : footstepClips.Length)} hSpeed={new Vector2(dv.x, dv.z).magnitude:F2} minSpeed={minStepSpeed}", this);
+        }
         if (!footstepsEnabled || footstepClips == null || footstepClips.Length == 0)
             return;
 
@@ -231,6 +236,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     void PlayFootstep()
     {
+        Debug.Log("Footstep!");
         int index = Random.Range(0, footstepClips.Length);
         if (footstepClips.Length > 1 && index == lastClipIndex)
             index = (index + 1) % footstepClips.Length;

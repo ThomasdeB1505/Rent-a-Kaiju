@@ -254,6 +254,7 @@ public class CameraMonitorSystem : MonoBehaviour
     MonitorSlot zoomedSlot;
     float zoomT;
     float zoomTarget;
+    int pendingPageAfterZoom = -1;
     LayoutSnapshot savedLayout;
     Vector2 zoomStartPos, zoomStartSize;
     bool hiddenForZoom;
@@ -539,14 +540,28 @@ public class CameraMonitorSystem : MonoBehaviour
 
         var p = pages[index];
 
-        if (!ready) { p.unlockedAtStart = true; return; } // called before Awake finished
+        if (!ready)
+        {
+            p.unlockedAtStart = true;
+            return;
+        }
 
         if (p.unlocked) return;
+
         p.unlocked = true;
         PageUnlocked?.Invoke(index);
 
-        if (zoomedSlot == null && !transitioning && (currentPage < 0 || autoSwitchToUnlockedPage))
-            ShowPage(index, currentPage < 0 ? 0 : (index > currentPage ? 1 : -1));
+        if (transitioning || (currentPage >= 0 && !autoSwitchToUnlockedPage))
+            return;
+
+        if (zoomedSlot != null)
+        {
+            pendingPageAfterZoom = index;
+            SetZoomTarget(0f);
+            return;
+        }
+
+        ShowPage(index, currentPage < 0 ? 0 : (index > currentPage ? 1 : -1));
     }
 
     public bool IsPageUnlocked(int index)
@@ -1099,11 +1114,22 @@ public class CameraMonitorSystem : MonoBehaviour
         rt.offsetMin = savedLayout.offsetMin;
         rt.offsetMax = savedLayout.offsetMax;
 
-        if (resetLookOnZoomOut) ResetLook(zoomedSlot);
+        if (resetLookOnZoomOut)
+            ResetLook(zoomedSlot);
 
         zoomedSlot = null;
         zoomT = 0f;
         zoomTarget = 0f;
+
+        // Switch to the newly unlocked page after zooming out.
+        if (pendingPageAfterZoom >= 0)
+        {
+            int target = pendingPageAfterZoom;
+            pendingPageAfterZoom = -1;
+
+            if (IsPageUnlocked(target))
+                ShowPage(target, currentPage < 0 ? 0 : (target > currentPage ? 1 : -1));
+        }
     }
 
     void SetHiddenForZoom(bool hidden)

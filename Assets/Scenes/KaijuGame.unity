@@ -26590,7 +26590,7 @@ MonoBehaviour:
   - prefab: {fileID: 1714849290621659827, guid: 03ab4a9c090b00345953b80ad3ea92e1, type: 3}
     rotationOffset: {x: 0, y: -90, z: 0}
   areaIndex: 1
-  objectiveCount: 20
+  objectiveCount: 25
   objectiveGlow:
     color: {r: 0, g: 0, b: 1, a: 1}
     intensity: 2.5
@@ -117111,7 +117111,7 @@ MonoBehaviour:
     walls: []
     brokenWhen: 0
     areaIndex: 0
-    buildingsRequired: 1
+    buildingsRequired: 5
     lockedVisual: {fileID: 0}
     unlockMessage: DESTROY THE SECOND WALL
     unlockMessageDuration: 3
@@ -117129,7 +117129,7 @@ MonoBehaviour:
     - {fileID: 6585686589221418611}
     brokenWhen: 0
     areaIndex: 1
-    buildingsRequired: 1
+    buildingsRequired: 5
     lockedVisual: {fileID: 0}
     unlockMessage: CLAIM YOUR FREEDOM. DESTROY THE FINAL WALL
     unlockMessageDuration: 3

@@ -48,6 +48,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5058337368246526805, guid: 64cf0c34b00ed8745802e5197f97c0d5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 337f523bea45f954690b7d57053a47b8, type: 2}
+    - target: {fileID: -4052912049345538848, guid: 64cf0c34b00ed8745802e5197f97c0d5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 337f523bea45f954690b7d57053a47b8, type: 2}
+    - target: {fileID: -387425855790486910, guid: 64cf0c34b00ed8745802e5197f97c0d5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 337f523bea45f954690b7d57053a47b8, type: 2}
+    - target: {fileID: 92057774174166078, guid: 64cf0c34b00ed8745802e5197f97c0d5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 337f523bea45f954690b7d57053a47b8, type: 2}
     - target: {fileID: 919132149155446097, guid: 64cf0c34b00ed8745802e5197f97c0d5, type: 3}
       propertyPath: m_Name
       value: Wall Pipes (Set 3)

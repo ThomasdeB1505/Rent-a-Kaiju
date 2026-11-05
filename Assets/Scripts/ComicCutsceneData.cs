@@ -20,12 +20,20 @@ namespace ComicCutscenes
         Shake     // appears instantly and shakes (impacts, shouting)
     }
 
-    /// <summary>One click-to-advance beat: reveal a panel or a text box.</summary>
+    /// <summary>One advance-to-continue beat: reveal a panel or a text box (or fade a cover away).</summary>
     [Serializable]
     public class ComicStep
     {
         [Tooltip("Panel image or text box to reveal. A CanvasGroup is added automatically.")]
         public RectTransform target;
+
+        [Tooltip("Instead of appearing, the Target starts visible and fades away (uses Duration). " +
+                 "Use black cover images to fake panels appearing on a single comic page. " +
+                 "Animation, Slide Distance and Typewriter Text are ignored.")]
+        public bool fadeAway = false;
+
+        [Tooltip("Deactivate the Target GameObject once it has faded out.")]
+        public bool deactivateAfterFade = true;
 
         public EnterAnimation animation = EnterAnimation.Fade;
 
@@ -37,7 +45,7 @@ namespace ComicCutscenes
         [Tooltip("Optional. If set, this text is typed out letter by letter after the target appears.")]
         public TMP_Text typewriterText;
 
-        [Tooltip("Play the next step automatically instead of waiting for a click (chain several panels).")]
+        [Tooltip("Play the next step automatically instead of waiting for input (chain several panels).")]
         public bool autoAdvance;
 
         [Min(0f)] public float autoAdvanceDelay = 0.15f;

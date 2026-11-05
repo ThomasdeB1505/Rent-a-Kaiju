@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -446,20 +446,45 @@ public class CameraMonitorSystem : MonoBehaviour
             return;
         }
 
-        if (transitioning) return; // ignore input while pages are sliding
+        if (transitioning) return;
 
-        if (Pressed(nextPageKey)) TryChangePage(1);
-        else if (Pressed(previousPageKey)) TryChangePage(-1);
+        // Previous page key.
+        if (Pressed(previousPageKey))
+        {
+            TryChangePage(-1);
+            return;
+        }
 
         var page = CurrentPageData;
         if (page == null || page.slots.Length == 0) return;
 
+        int columns = Mathf.Max(1, page.columns);
+        int row = selectedIndex / columns;
+        int col = selectedIndex % columns;
+        int rowLen = Mathf.Min(columns, page.slots.Length - row * columns);
+
+        // Right edge: move to the next page.
+        if (Pressed(rightKey) && col == rowLen - 1)
+        {
+            TryChangePage(1);
+            return;
+        }
+
+        // Left edge: move to the previous page.
+        if (Pressed(leftKey) && col == 0)
+        {
+            TryChangePage(-1);
+            return;
+        }
+
+        // Normal selection movement.
         int dx = (Pressed(rightKey) ? 1 : 0) - (Pressed(leftKey) ? 1 : 0);
         int dy = (Pressed(downKey) ? 1 : 0) - (Pressed(upKey) ? 1 : 0);
+
         if (dx != 0) dy = 0;
 
         if (dx != 0 || dy != 0)
-            Select(MoveSelection(selectedIndex, dx, dy, page.slots.Length, Mathf.Max(1, page.columns)));
+            Select(MoveSelection(selectedIndex, dx, dy, page.slots.Length, columns));
 
         if (zoomPressed) BeginZoomIn();
     }

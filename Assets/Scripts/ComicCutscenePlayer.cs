@@ -13,8 +13,11 @@ namespace ComicCutscenes
 {
     /// <summary>
     /// Plays a comic-panel cutscene: panels and text boxes appear one by one,
-    /// click / Space / Enter / gamepad South advances. A click during an animation
-    /// or while text is typing completes it instead of advancing.
+    /// Space / Enter / gamepad South advances (mouse click too, if "Advance On Mouse Click"
+    /// is ticked). A press during an animation or while text is typing completes it
+    /// instead of advancing.
+    /// Steps with "Fade Away" ticked start visible and fade out instead
+    /// (handy for black cover images that hide parts of a single comic page).
     /// Put this on a full-screen RectTransform under a Canvas.
     /// </summary>
     [DisallowMultipleComponent]
@@ -26,6 +29,8 @@ namespace ComicCutscenes
 
         [Header("Playback")]
         public bool playOnStart = true;
+        [Tooltip("If off, mouse clicks do nothing; only Space / Enter / gamepad South advance.")]
+        public bool advanceOnMouseClick = false;
         [Min(1f)] public float charactersPerSecond = 40f;
         [Tooltip("Extra pause after . , ! ? and similar.")]
         [Min(0f)] public float punctuationPause = 0.12f;
@@ -150,7 +155,7 @@ namespace ComicCutscenes
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left) RequestAdvance();
+            if (advanceOnMouseClick && eventData.button == PointerEventData.InputButton.Left) RequestAdvance();
         }
 
         // ---------------------------------------------------------------- main sequence
@@ -227,6 +232,14 @@ namespace ComicCutscenes
         {
             if (step.sound != null && audioSource != null) audioSource.PlayOneShot(step.sound);
 
+            // Fade-away steps: the target is already visible and fades out instead of appearing.
+            if (step.fadeAway)
+            {
+                yield return FadeAwayStep(step);
+                step.onShown?.Invoke();
+                yield break;
+            }
+
             bool completedEarly = false;
 
             if (step.target != null)
@@ -250,6 +263,28 @@ namespace ComicCutscenes
 
             if (step.typewriterText != null)
                 yield return TypeText(step.typewriterText, completedEarly);
+        }
+
+        IEnumerator FadeAwayStep(ComicStep step)
+        {
+            if (step.target == null) yield break;
+
+            CanvasGroup g = GetGroup(step.target);
+            float from = g.alpha;
+            float t = 0f;
+
+            while (t < 1f)
+            {
+                if (_skipRequested) yield break;
+                if (ConsumeAdvance()) break; // a click finishes the fade instantly
+
+                t = step.duration <= 0f ? 1f : Mathf.Min(1f, t + Time.unscaledDeltaTime / step.duration);
+                g.alpha = Mathf.Lerp(from, 0f, t);
+                yield return null;
+            }
+
+            g.alpha = 0f;
+            if (step.deactivateAfterFade) step.target.gameObject.SetActive(false);
         }
 
         IEnumerator TypeText(TMP_Text text, bool instant)
@@ -448,7 +483,9 @@ namespace ComicCutscenes
                 {
                     if (step.target != null)
                     {
-                        GetGroup(step.target).alpha = 0f;
+                        // Fade-away targets (the black covers) start visible; everything else starts hidden.
+                        if (step.fadeAway) step.target.gameObject.SetActive(true);
+                        GetGroup(step.target).alpha = step.fadeAway ? 1f : 0f;
                         step.target.anchoredPosition = RestPos(step.target);
                         step.target.localScale = RestScale(step.target);
                     }

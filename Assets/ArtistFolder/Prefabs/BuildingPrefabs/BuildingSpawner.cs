@@ -18,19 +18,37 @@ public class BuildingEntry
 }
 
 /// <summary>
+/// Glow settings that are applied to the ObjectiveTarget / ForbiddenTarget a building receives.
+/// </summary>
+[Serializable]
+public class GlowSettings
+{
+    public Color color = Color.white;
+
+    [Tooltip("HDR brightness multiplier of the glow. 0 = no glow.")]
+    [Min(0f)] public float intensity = 2.5f;
+
+    [Tooltip("Slowly breathe the glow brightness up and down.")]
+    public bool pulse = true;
+
+    [Min(0f)] public float pulseSpeed = 2f;
+
+    public GlowSettings() { }
+
+    public GlowSettings(Color color)
+    {
+        this.color = color;
+    }
+}
+
+/// <summary>
 /// Spawns a random building on every child of 'spawnPointsParent'.
 /// Then picks random spawn points and adds the ObjectiveTarget component to
 /// 'objectiveCount' of them and the ForbiddenTarget component to 'forbiddenCount' of them.
 /// Any building prefab can become an objective or a forbidden building.
-/// Use one BuildingSpawner per area and give each its own Area Index.
 /// </summary>
 public class BuildingSpawner : MonoBehaviour
 {
-    [Header("Level")]
-    [Tooltip("Which area this spawner's buildings belong to (0 = first area, 1 = second). " +
-             "Objectives spawned here count towards that area's wall in LevelProgressionController.")]
-    [Min(0)][SerializeField] private int areaIndex = 0;
-
     [Header("Spawn Points")]
     [Tooltip("Parent object whose direct children are the spawn point empties.")]
     [SerializeField] private Transform spawnPointsParent;
@@ -39,12 +57,20 @@ public class BuildingSpawner : MonoBehaviour
     [FormerlySerializedAs("normalBuildings")]
     [SerializeField] private BuildingEntry[] buildings;
 
-    [Header("Counts")]
-    [Tooltip("How many buildings get the ObjectiveTarget component (blue glow, must be destroyed).")]
-    [Min(0)][SerializeField] private int objectiveCount = 3;
+    [Header("Area")]
+    [Tooltip("Which area this spawner belongs to (0 = first area, 1 = second area, ...). " +
+         "Must match the Area Index of the wall gate in LevelProgressionController that this area unlocks.")]
+    [Min(0)][SerializeField] private int areaIndex = 0;
 
-    [Tooltip("How many buildings get the ForbiddenTarget component (red glow, must NOT be destroyed).")]
+    [Header("Objective Buildings (must be destroyed)")]
+    [Tooltip("How many buildings get the ObjectiveTarget component.")]
+    [Min(0)][SerializeField] private int objectiveCount = 3;
+    [SerializeField] private GlowSettings objectiveGlow = new GlowSettings(Color.blue);
+
+    [Header("Forbidden Buildings (must NOT be destroyed)")]
+    [Tooltip("How many buildings get the ForbiddenTarget component.")]
     [Min(0)][SerializeField] private int forbiddenCount = 2;
+    [SerializeField] private GlowSettings forbiddenGlow = new GlowSettings(Color.red);
 
     [Header("Size Limit")]
     [Tooltip("Default box for spawn points WITHOUT a SpawnPointBox component. " +
@@ -132,9 +158,9 @@ public class BuildingSpawner : MonoBehaviour
             if (instance == null) continue;
 
             if (i < objectives)
-                AddOnce<ObjectiveTarget>(instance).areaIndex = areaIndex;
+                MakeObjective(instance);
             else if (i < objectives + forbidden)
-                AddOnce<ForbiddenTarget>(instance);
+                MakeForbidden(instance);
         }
     }
 
@@ -262,13 +288,41 @@ public class BuildingSpawner : MonoBehaviour
         return found;
     }
 
-    // Adds the component unless the prefab already has it (both scripts allow only one per object).
-    // Returns the component so callers can configure it.
-    private static T AddOnce<T>(GameObject go) where T : Component
+    private void MakeObjective(GameObject go)
     {
-        if (!go.TryGetComponent(out T existing))
-            existing = go.AddComponent<T>();
-        return existing;
+        ObjectiveTarget target = GetOrAdd<ObjectiveTarget>(go);
+
+        target.areaIndex = areaIndex;   // <-- new
+
+        target.glowColor = objectiveGlow.color;
+        target.glowIntensity = objectiveGlow.intensity;
+        target.pulse = objectiveGlow.pulse;
+        target.pulseSpeed = objectiveGlow.pulseSpeed;
+
+        // The target already applied its default glow in Awake(), so ask it to redraw with the new values.
+        target.SendMessage("ApplyGlow", SendMessageOptions.DontRequireReceiver);
+    }
+
+    private void MakeForbidden(GameObject go)
+    {
+        ForbiddenTarget target = GetOrAdd<ForbiddenTarget>(go);
+
+        target.glowColor = forbiddenGlow.color;
+        target.glowIntensity = forbiddenGlow.intensity;
+        target.pulse = forbiddenGlow.pulse;
+        target.pulseSpeed = forbiddenGlow.pulseSpeed;
+
+        target.SendMessage("ApplyGlow", SendMessageOptions.DontRequireReceiver);
+    }
+
+    // Returns the component, adding it first if the prefab doesn't have it
+    // (both target scripts allow only one per object).
+    private static T GetOrAdd<T>(GameObject go) where T : Component
+    {
+        if (!go.TryGetComponent(out T component))
+            component = go.AddComponent<T>();
+
+        return component;
     }
 
     private void ClearSpawned()

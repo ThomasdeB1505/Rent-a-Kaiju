@@ -93,6 +93,9 @@ public class LevelProgressionController : MonoBehaviour
     [Tooltip("The comic cutscene that plays after the final wall breaks. Its 'Play On Start' is forced off by this script, and this script listens to its On Finished event.")]
     public ComicCutscenePlayer cutscene;
 
+    [Tooltip("Optional. A second comic (e.g. the same comic on another screen/canvas). Starts at the same time as the main one. The game still ends when the main cutscene finishes.")]
+    public ComicCutscenePlayer secondCutscene;
+
     [Min(0f), Tooltip("Seconds between the final wall breaking and the cutscene starting, so the player sees it crash.")]
     public float cutsceneDelay = 1f;
 
@@ -143,6 +146,9 @@ public class LevelProgressionController : MonoBehaviour
             cutscene.playOnStart = false; // we decide when it plays
             cutscene.onFinished.AddListener(OnCutsceneFinished);
         }
+
+        if (secondCutscene != null)
+            secondCutscene.playOnStart = false; // we decide when it plays
 
         foreach (var g in gates)
         {
@@ -388,6 +394,12 @@ public class LevelProgressionController : MonoBehaviour
         }
 
         cutscene.Play();
+
+        if (secondCutscene != null)
+        {
+            secondCutscene.gameObject.SetActive(true); // in case its canvas starts disabled
+            secondCutscene.Play();
+        }
     }
 
     void OnCutsceneFinished()

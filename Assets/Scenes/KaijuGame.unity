@@ -12283,7 +12283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackKey: 101
   cooldown: 1
-  animator: {fileID: 0}
+  animator: {fileID: 1987088916}
   attackTrigger: Attack
   useAnimationEvent: 0
   hitDelay: 1
@@ -12531,6 +12531,22 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 2.99, z: 1.57}
+--- !u!114 &197154626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197154584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37cad5b7b1e141b4d96b8ddd56558200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idleModel: {fileID: 1288585710}
+  animatedModel: {fileID: 1987088914}
+  animator: {fileID: 1987088916}
+  walkSpeedThreshold: 0.5
 --- !u!1 &198845644
 GameObject:
   m_ObjectHideFlags: 0
@@ -58633,6 +58649,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1488449463}
+    - targetCorrespondingSourceObject: {fileID: 4207293392497186, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1987088915}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1773623360729482, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       insertIndex: 1
@@ -58652,6 +58671,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1773623360729482, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 197154611}
+    - targetCorrespondingSourceObject: {fileID: 1773623360729482, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 197154626}
     - targetCorrespondingSourceObject: {fileID: 1773623360729482, guid: 11aaea5348574644a9eb4f4504fcce3f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 197154620}
@@ -78617,10 +78639,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kaiju4
       objectReference: {fileID: 0}
+    - target: {fileID: 3282953440358584136, guid: f9f75215087671e4b8bc31b22d01d2c9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3282953440358584136, guid: f9f75215087671e4b8bc31b22d01d2c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1488449464}
   m_SourcePrefab: {fileID: 100100000, guid: f9f75215087671e4b8bc31b22d01d2c9, type: 3}
 --- !u!1 &1123799031
 GameObject:
@@ -90799,6 +90828,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footprint: {x: 5, y: 5}
   maxHeight: 0
+--- !u!1 &1288585710 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3282953440358584136, guid: f9f75215087671e4b8bc31b22d01d2c9, type: 3}
+  m_PrefabInstance: {fileID: 1123426416}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1292980117
 Transform:
   m_ObjectHideFlags: 0
@@ -105568,6 +105602,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2793556053416482290, guid: f9f75215087671e4b8bc31b22d01d2c9, type: 3}
   m_PrefabInstance: {fileID: 1123426416}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1488449464
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288585710}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 353580c596a646b4ab8421e871494e39, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1489816902
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146187,6 +146243,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footprint: {x: 5, y: 5}
   maxHeight: 0
+--- !u!1 &1987088914 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2903478643609883130, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+  m_PrefabInstance: {fileID: 9211982195006736388}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1987088915 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+  m_PrefabInstance: {fileID: 9211982195006736388}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1987088916
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987088914}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 353580c596a646b4ab8421e871494e39, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1987610623
 GameObject:
   m_ObjectHideFlags: 0
@@ -161108,6 +161196,82 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0af49ed1835e1744ab782a4edeb20339, type: 3}
+--- !u!1001 &9211982195006736388
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 197154612}
+    m_Modifications:
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.13729015
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.13729015
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.13729015
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.0000000014380476
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.4281662
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70710707
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.70710653
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2522274030396672832, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2903478643609883130, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_Name
+      value: KaijuAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 2903478643609883130, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2903478643609883130, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1987088916}
+  m_SourcePrefab: {fileID: 100100000, guid: 6c46272bb4ac1624784c9329680ca996, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

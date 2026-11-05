@@ -68,6 +68,9 @@ public class PlayerAttack : MonoBehaviour
     {
         nextAttackTime = Time.time + cooldown;
 
+        if (animator != null)
+            animator.gameObject.SetActive(true);
+
         if (animator != null && !string.IsNullOrEmpty(attackTrigger))
             animator.SetTrigger(attackTrigger);
 

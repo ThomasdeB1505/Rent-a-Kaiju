@@ -88,6 +88,9 @@ public class CameraMonitorSystem : MonoBehaviour
     [Tooltip("Jump to a page as soon as it is unlocked. If off, the player switches with the page keys.")]
     public bool autoSwitchToUnlockedPage = false;
 
+    [Tooltip("Page shown when the game starts. Set to 1 when page 0 is the health screen.")]
+    public int startPageIndex = 0;
+
     [Tooltip("If on, pressing next on the last page wraps around to the first (and the reverse), so it never shakes. " +
              "If off, pages are laid out left to right and the end of the row shakes.")]
     public bool wrapPages = false;
@@ -295,7 +298,7 @@ public class CameraMonitorSystem : MonoBehaviour
 
         ready = true;
 
-        int first = pages.FindIndex(p => p.unlocked);
+        int first = IsPageUnlocked(startPageIndex) ? startPageIndex : pages.FindIndex(p => p.unlocked);
         if (first >= 0) ShowPage(first);
     }
 
@@ -449,15 +452,19 @@ public class CameraMonitorSystem : MonoBehaviour
 
         if (transitioning) return;
 
-        // Previous page key.
-        if (Pressed(previousPageKey))
-        {
-            TryChangePage(-1);
-            return;
-        }
+        if (Pressed(previousPageKey)) { TryChangePage(-1); return; }
+        if (Pressed(nextPageKey)) { TryChangePage(1); return; }
 
         var page = CurrentPageData;
-        if (page == null || page.slots.Length == 0) return;
+        if (page == null) return;
+
+        // A page with no screens (the health page): left/right just change page.
+        if (page.slots.Length == 0)
+        {
+            if (Pressed(rightKey)) TryChangePage(1);
+            else if (Pressed(leftKey)) TryChangePage(-1);
+            return;
+        }
 
         int columns = Mathf.Max(1, page.columns);
         int row = selectedIndex / columns;

@@ -16,10 +16,12 @@ using UnityEngine;
 /// NOTES
 /// - If your car model's front doesn't face +Z, make the model a CHILD of an empty root and
 ///   put this script on the root (ForbiddenTarget finds renderers in children automatically).
-/// - If your kaiju hits things via OnCollisionEnter/OnTriggerEnter, give the car a Collider
-///   and a Rigidbody. This script sets any Rigidbody on the car to kinematic with no gravity.
-/// - Destruction: your existing kaiju logic just needs to Destroy(gameObject) the car,
-///   exactly like it does for the forbidden buildings.
+/// - The car needs at least one Collider (root or child) so it can detect the player.
+///   This script sets any Rigidbody on the car to kinematic with no gravity.
+/// - Player impact: the car explodes the moment it touches the player (tag "Player"),
+///   no force required, even if the player is standing still.
+/// - Destruction: if the car has a DestructibleObject it uses its debris/audio via Break(),
+///   otherwise it just calls Destroy(gameObject). ForbiddenTarget reports the loss either way.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(ForbiddenTarget))]
@@ -61,6 +63,13 @@ public class ForbiddenCar : MonoBehaviour
     [Tooltip("How quickly the car turns to face where it's going.")]
     public float turnSpeed = 6f;
 
+    [Header("Player Impact")]
+    [Tooltip("Car explodes the moment it touches the player, no force needed.")]
+    public bool explodeOnPlayerContact = true;
+    public string playerTag = "Player";
+    [Tooltip("Shrinks (negative) or grows (positive) the contact box. Use a small negative value if it triggers too early.")]
+    public float contactPadding = 0f;
+
     // Runtime state
     private Vector3 origin;
     private Vector3 fwd;
@@ -73,8 +82,14 @@ public class ForbiddenCar : MonoBehaviour
     private float actualSpeed;
     private float bobPhase;
 
+    private Collider[] ownColliders;
+    private bool exploded;
+    private static readonly Collider[] overlapBuffer = new Collider[16];
+
     void Awake()
     {
+        ownColliders = GetComponentsInChildren<Collider>();
+
         var rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -156,6 +171,77 @@ public class ForbiddenCar : MonoBehaviour
 
         float bob = Mathf.Sin(Time.time * bobSpeed + bobPhase) * bobAmount;
         transform.position = basePos + Vector3.up * bob;
+    }
+
+    // ---------- Player impact ----------
+
+    void FixedUpdate()
+    {
+        if (!explodeOnPlayerContact || exploded) return;
+        if (OverlapsPlayer()) Explode();
+    }
+
+    void OnCollisionEnter(Collision c)
+    {
+        if (explodeOnPlayerContact && IsPlayer(c.collider)) Explode();
+    }
+
+    void OnCollisionStay(Collision c)
+    {
+        if (explodeOnPlayerContact && IsPlayer(c.collider)) Explode();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (explodeOnPlayerContact && IsPlayer(other)) Explode();
+    }
+
+    bool IsPlayer(Collider col)
+    {
+        if (col == null) return false;
+        return col.CompareTag(playerTag) || col.transform.root.CompareTag(playerTag);
+    }
+
+    // Fallback that works whatever Rigidbody/CharacterController setup the player has.
+    bool OverlapsPlayer()
+    {
+        if (ownColliders == null || ownColliders.Length == 0) return false;
+
+        Bounds b = default;
+        bool hasBounds = false;
+        foreach (var col in ownColliders)
+        {
+            if (col == null || !col.enabled) continue;
+            if (!hasBounds) { b = col.bounds; hasBounds = true; }
+            else b.Encapsulate(col.bounds);
+        }
+        if (!hasBounds) return false;
+
+        Vector3 half = b.extents + Vector3.one * contactPadding;
+        half = Vector3.Max(half, Vector3.one * 0.01f);
+
+        int hits = Physics.OverlapBoxNonAlloc(b.center, half, overlapBuffer,
+            Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+
+        for (int i = 0; i < hits; i++)
+        {
+            var col = overlapBuffer[i];
+            if (col == null || col.transform.IsChildOf(transform)) continue;
+            if (IsPlayer(col)) return true;
+        }
+        return false;
+    }
+
+    void Explode()
+    {
+        if (exploded) return;
+        exploded = true;
+
+        // Uses the debris/audio system if the car has a DestructibleObject, otherwise just removes it.
+        // Either way Destroy(gameObject) runs, so ForbiddenTarget reports it to LoseManager as usual.
+        var destructible = GetComponent<DiabolicalGames.DestructibleObject>();
+        if (destructible != null) destructible.Break();
+        else Destroy(gameObject);
     }
 
     // ---------- Path helpers ----------
